@@ -1,0 +1,74 @@
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+        self.root = None
+        self.children = []
+
+
+
+def Insert(v, x):
+    if v is None:
+        v = Node(x)
+    elif x < v.value:
+        v.left = Insert(v.left, x)
+    elif x > v.value:
+        v.right = Insert(v.right, x)
+    children.add(v)
+    return v
+
+
+print("Dette er til oppgave B, oblig 1 i 2010, yippie.")
+
+def Balance(v):
+    if BalanceFactor(v) < -1:
+        if BalanceFactor(v.right) > 0:
+            v.right = RightRotate(v.right)
+
+            return LeftRotate(v)
+        if BalanceFactor(v) > 1:
+            if BalanceFactor(v.left) < 0:
+                v.left = LeftRotate(v.left)
+            return RightRotate(v)
+        return v
+        
+
+
+def BalanceFactor(v):
+    if v is None:
+        return 0
+    return Height(v.left)-Height(v.right) #regner ut forskjellen på høyden mellom subtrærene
+
+
+def Height(v):
+    h = -1
+    if v is None:
+        return h
+    for c in v.children:
+        h = Max(h, Height(c))
+    return 1 + h
+
+
+def Max(h, høyde):
+    return
+
+
+antall_operasjoner = int(input("Skriv et heltall: "))
+
+while antall_operasjoner > 0:
+    Bruker_input = input("Venter kommando\n ").split()
+    kommando = input[0]
+    x = int(input[1])
+    if kommando == "contains":
+        contains
+    if kommando == "insert":
+
+    if kommando == "remove":
+
+    if kommando == "size":
+
+
+
+
+
