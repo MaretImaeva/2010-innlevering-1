@@ -1,1 +1,20 @@
+class Node:
 
+    def __init__(self, element):
+        self.element = element
+        self.right = None
+        self.left = None
+
+
+def insert (v,x):
+    if v is None:
+        return Node(x)
+        
+    elif x < v.element:
+        v.left = insert(v.left,x)
+        # print(f"Adding to left")
+    elif x > v.element:
+        v.right = insert(v.right,x)
+        # print(f"Adding to right")
+    return v
+    
