@@ -4,7 +4,6 @@ class Node:
         self.left = None
         self.right = None
         self.root = None
-        self.children = []
 
 
 
@@ -19,7 +18,7 @@ def Insert(v, x):
     return v
 
 
-print("Dette er til oppgave B, oblig 1 i 2010, yippie.")
+#For AVL trær
 
 def Balance(v):
     if BalanceFactor(v) < -1:
@@ -54,19 +53,25 @@ def Max(h, høyde):
     return
 
 
-antall_operasjoner = int(input("Skriv et heltall: "))
 
-while antall_operasjoner > 0:
-    Bruker_input = input("Venter kommando\n ").split()
-    kommando = input[0]
-    x = int(input[1])
-    if kommando == "contains":
-        contains
-    if kommando == "insert":
+#For begge trær
 
-    if kommando == "remove":
-
-    if kommando == "size":
+def input_fra_bruker():
+    antall_operasjoner = int(input("Skriv et heltall: "))
+    while antall_operasjoner > 0:
+        bruker_input = input("Venter kommando:\n").split(" ")
+        kommando = bruker_input[0]
+        x = int(bruker_input[1])
+        if kommando == "contains":
+            return contains(x)
+        if kommando == "insert":
+            return insert(x)
+        if kommando == "remove":
+            return remove(x)
+        if kommando == "size":
+            
+        
+input_fra_bruker()
 
 
 
