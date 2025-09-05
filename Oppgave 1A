@@ -24,4 +24,4 @@ full_input = sys.stdin.read()
 antall_kommandoer = int(full_input[0])
 for line in full_input[1:].splitlines():
     line = line.split(" ")
-    sjekkKommando(line[0], line[1])
+    sjekkKommando(line[0], int(line[1]))
