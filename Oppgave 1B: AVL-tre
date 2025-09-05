@@ -1,0 +1,89 @@
+# AVL-treet
+
+import sys
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+        self.height = 0
+
+#Legg til insert, remove, contains og size
+
+def Balance(v):
+    if BalanceFactor(v) < -1:
+        if BalanceFactor(v.right) > 0:
+            v.right = RightRotate(v.right)
+
+            return LeftRotate(v)
+    if BalanceFactor(v) > 1:
+        if BalanceFactor(v.left) < 0:
+            v.left = LeftRotate(v.left)
+        return RightRotate(v)
+    return v
+        
+def BalanceFactor(v):
+    if v is None:
+        return 0
+    return Height(v.left)-Height(v.right) #regner ut forskjellen på høyden mellom subtrærene
+
+def Height(v):
+    h = -1
+    if v is None:
+        return h
+    return v.height
+
+def SetHeight(v):
+    if v is None:
+        return
+    v.height = 1 + Max(Height(v.left), Height(v.right))
+
+def Max(h1, h2):
+    if h1 > h2:
+        return h1
+    else:
+        return h2
+    
+def LeftRotate(v):
+    y = v.right
+    z = y.left
+
+    y.left = v
+    v.right = z
+
+    SetHeight(v)
+    SetHeight(y)
+
+    return y
+
+def RightRotate(v):
+    y = v.left
+    z = y.right
+
+    y.right = v
+    v.left = z
+
+    SetHeight(v)
+    SetHeight(y)
+
+    return y
+
+#input
+
+def sjekkKommando(kommando, v):
+        if kommando == "contains":
+            return contains(v)
+        if kommando == "insert":
+            return insert(v)
+        if kommando == "remove":
+            return remove(v)
+        if kommando == "size":
+            return size()
+            
+print("Hei! Vennligst skriv ant kommandoer og deretter hvilke")
+full_input = sys.stdin.read()
+antall_kommandoer = int(full_input[0])
+for line in full_input[1:].splitlines():
+    line = line.split(" ")
+    sjekkKommando(line[0], line[1])
