@@ -1,1 +1,25 @@
 
+class Node:
+    def __init__(self, element, venstre = None, høyre = None):
+        self.element = element
+        self.venstre = venstre
+        self.høyre = høyre
+
+
+#er x med i treet?
+def contains(v, x):
+    if v is None:
+        return False
+    if v.element == x:
+        return True
+    elif x > v.element:
+        return contains(v.høyre, x)
+    else:
+        return contains(v.venstre, x)
+
+
+# hvor mange elementer er det i treet?
+def size(v):
+    if v is None:
+        return 0
+    return 1 + size(v.venstre) + size(v.høyre)
