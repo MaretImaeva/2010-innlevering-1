@@ -1,11 +1,12 @@
+import sys
+
 class Node:
     def __init__(self, value):
         self.value = value
         self.left = None
         self.right = None
-        self.root = None
-
-
+        #For AVL treet:
+        self.height = 0
 
 def Insert(v, x):
     if v is None:
@@ -14,9 +15,7 @@ def Insert(v, x):
         v.left = Insert(v.left, x)
     elif x > v.value:
         v.right = Insert(v.right, x)
-    children.add(v)
     return v
-
 
 #For AVL trær
 
@@ -26,54 +25,78 @@ def Balance(v):
             v.right = RightRotate(v.right)
 
             return LeftRotate(v)
-        if BalanceFactor(v) > 1:
-            if BalanceFactor(v.left) < 0:
-                v.left = LeftRotate(v.left)
-            return RightRotate(v)
-        return v
+    if BalanceFactor(v) > 1:
+        if BalanceFactor(v.left) < 0:
+            v.left = LeftRotate(v.left)
+        return RightRotate(v)
+    return v
         
-
-
 def BalanceFactor(v):
     if v is None:
         return 0
     return Height(v.left)-Height(v.right) #regner ut forskjellen på høyden mellom subtrærene
 
-
 def Height(v):
     h = -1
     if v is None:
         return h
-    for c in v.children:
-        h = Max(h, Height(c))
-    return 1 + h
+    return v.height
+
+def SetHeight(v):
+    if v is None:
+        return
+    v.height = 1 + Max(Height(v.left), Height(v.right))
 
 
-def Max(h, høyde):
-    return
+def Max(h1, h2):
+    if h1 > h2:
+        return h1
+    else:
+        return h2
+    
 
+def LeftRotate(v):
+    y = v.right
+    z = y.left
 
+    y.left = v
+    v.right = z
+
+    SetHeight(v)
+    SetHeight(y)
+
+    return y
+
+def RightRotate(v):
+    y = v.left
+    z = y.right
+
+    y.right = v
+    v.left = z
+
+    SetHeight(v)
+    Setheight(y)
+
+    return y
 
 #For begge trær
 
-def input_fra_bruker():
-    antall_operasjoner = int(input("Skriv et heltall: "))
-    while antall_operasjoner > 0:
-        bruker_input = input("Venter kommando:\n").split(" ")
-        kommando = bruker_input[0]
-        x = int(bruker_input[1])
+def sjekkKommando(kommando, v):
         if kommando == "contains":
-            return contains(x)
+            return contains(v)
         if kommando == "insert":
-            return insert(x)
+            return insert(v)
         if kommando == "remove":
-            return remove(x)
+            return remove(v)
         if kommando == "size":
+            return size()
             
-        
-input_fra_bruker()
-
-
+print("Hei! Vennligst skriv ant kommandoer og deretter hvilke")
+full_input = sys.stdin.read()
+antall_kommandoer = int(full_input[0])
+for line in full_input[1:].splitlines():
+    line = line.split(" ")
+    sjekkKommando(line[0], line[1])
 
 
 
