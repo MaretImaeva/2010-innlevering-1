@@ -1,0 +1,27 @@
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+#insert, size, remove og contains:
+
+
+
+#stdin - legge inn kommando til en fil eller skrive inn i terminal manuelt
+def sjekkKommando(kommando, v):
+        if kommando == "contains":
+            return contains(v)
+        if kommando == "insert":
+            return insert(v)
+        if kommando == "remove":
+            return remove(v)
+        if kommando == "size":
+            return size()
+            
+print("Hei! Vennligst skriv ant kommandoer og deretter hvilke")
+full_input = sys.stdin.read()
+antall_kommandoer = int(full_input[0])
+for line in full_input[1:].splitlines():
+    line = line.split(" ")
+    sjekkKommando(line[0], line[1])
