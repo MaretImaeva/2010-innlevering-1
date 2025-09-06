@@ -25,6 +25,27 @@ def insert (v,x):
     return v
 
 
+def FindMin(x):
+    if x.left is None:
+        return x
+    return FindMin(x.left)
+
+
+def Remove(v,x):
+    if v is None:
+        return None
+    elif x < v.element:
+        v.left = Remove(v.left,x)
+        return v
+    elif x > v.element:
+        v.right = Remove(v.right,x)
+        return v
+    elif v.left is None:
+        return v.left
+    u = FindMin(v.right)
+    v.element = u.element
+    v.right = Remove(v.right, u.element)
+    return v
 
 
 #er x med i treet?
