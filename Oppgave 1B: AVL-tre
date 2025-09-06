@@ -11,6 +11,22 @@ class Node:
 
 #Legg til insert, remove, contains og size
 
+
+def insert (v,x):
+    if v is None:
+        return Node(x)
+        
+    elif x < v.element:
+        v.left = insert(v.left,x)
+        # print(f"Adding to left")
+    elif x > v.element:
+        v.right = insert(v.right,x)
+        # print(f"Adding to right")
+    return v
+
+
+
+
 #er x med i treet?
 def contains(v, x):
     if v is None:
