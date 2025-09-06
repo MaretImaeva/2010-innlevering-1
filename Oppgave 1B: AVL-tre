@@ -3,13 +3,32 @@
 import sys
 
 class Node:
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, element):
+        self.element = element
         self.left = None
         self.right = None
         self.height = 0
 
 #Legg til insert, remove, contains og size
+
+#er x med i treet?
+def contains(v, x):
+    if v is None:
+        return False
+    if v.element == x:
+        return True
+    elif x > v.element:
+        return contains(v.right, x)
+    else:
+        return contains(v.left, x)
+
+
+# hvor mange elementer er det i treet?
+def size(v):
+    if v is None:
+        return 0
+    return 1 + size(v.venstre) + size(v.høyre)
+
 
 def Balance(v):
     if BalanceFactor(v) < -1:
@@ -81,7 +100,7 @@ def sjekkKommando(kommando, v):
         if kommando == "size":
             return size()
             
-print("Hei! Vennligst skriv ant kommandoer og deretter hvilke")
+print("Hei! Skriv din kommando:")
 full_input = sys.stdin.read()
 antall_kommandoer = int(full_input[0])
 for line in full_input[1:].splitlines():
