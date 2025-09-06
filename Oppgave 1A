@@ -6,6 +6,59 @@ class Node:
 
 #insert, size, remove og contains:
 
+def insert (v,x):
+    if v is None:
+        return Node(x)
+        
+    elif x < v.element:
+        v.left = insert(v.left,x)
+        # print(f"Adding to left")
+    elif x > v.element:
+        v.right = insert(v.right,x)
+        # print(f"Adding to right")
+    return v
+
+
+def FindMin(x):
+    if x.left is None:
+        return x
+    return FindMin(x.left)
+
+
+def Remove(v,x):
+    if v is None:
+        return None
+    elif x < v.element:
+        v.left = Remove(v.left,x)
+        return v
+    elif x > v.element:
+        v.right = Remove(v.right,x)
+        return v
+    elif v.left is None:
+        return v.left
+    u = FindMin(v.right)
+    v.element = u.element
+    v.right = Remove(v.right, u.element)
+    return v
+
+
+#er x med i treet?
+def contains(v, x):
+    if v is None:
+        return False
+    if v.element == x:
+        return True
+    elif x > v.element:
+        return contains(v.right, x)
+    else:
+        return contains(v.left, x)
+
+
+# hvor mange elementer er det i treet?
+def size(v):
+    if v is None:
+        return 0
+    return 1 + size(v.venstre) + size(v.høyre)
 
 
 #stdin - legge inn kommando til en fil eller skrive inn i terminal manuelt
