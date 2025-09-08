@@ -1,145 +1,162 @@
 # AVL-treet
-
 import sys
 
-class Node:
-    def __init__(self, element):
-        self.element = element
-        self.left = None
-        self.right = None
-        self.height = 0
+class AVL_Set:
+    def __init__(self):
+        self.root = None
 
-#Legg til insert, remove, contains og size
+    class Node:
+        def __init__(self, element):
+            self.element = element
+            self.left = None
+            self.right = None
+            self.height = 0
+            self.size = 1
 
 
-def insert (v,x):
-    if v is None:
-        return Node(x)
+    def insert(self, v, x):
+        if v is None:
+            v = self.Node(x)
+        elif x < v.element:
+            v.left = self.insert(v.left, x)
+        elif x > v.element:
+            v.right = self.insert(v.right, x)
+        self.SetHeight(v)
+        return self.Balance(v)
+
+
+    def FindMin(self,x):
+        if x.left is None:
+            return x
+        return self.FindMin(x.left)
+
+
+
+    def Remove(self, v, x):
+        if v is None:
+            return None
+        if x < v.element:
+            v.left = self.Remove(v.left, x)
+        elif x > v.element:
+            v.right = self.Remove(v.right, x)
+        elif v.left is None:
+            v = v.right
+        elif v.right is None:
+            v = v.left
+        else:
+            u = self.FindMin(v.right)
+            v.element = u.element
+            v.right = self.Remove(v.right, u.element)
         
-    elif x < v.element:
-        v.left = insert(v.left,x)
-        # print(f"Adding to left")
-    elif x > v.element:
-        v.right = insert(v.right,x)
-        # print(f"Adding to right")
-    return v
+        v.size = 1 + (v.left.size if v.left else 0) + (v.right.size if v.right else 0)
+
+        self.SetHeight(v)
+        return self.Balance(v)
 
 
-def FindMin(x):
-    if x.left is None:
-        return x
-    return FindMin(x.left)
+    def contains(self,v, x):
+        if v is None:
+            return False
+        if v.element == x:
+            return True
+        elif x > v.element:
+            return self.contains(v.right, x)
+        else:
+            return self.contains(v.left, x)
 
 
-def Remove(v,x):
-    if v is None:
-        return None
-    elif x < v.element:
-        v.left = Remove(v.left,x)
-        return v
-    elif x > v.element:
-        v.right = Remove(v.right,x)
-        return v
-    elif v.left is None:
-        return v.left
-    u = FindMin(v.right)
-    v.element = u.element
-    v.right = Remove(v.right, u.element)
-    return v
-
-
-#er x med i treet?
-def contains(v, x):
-    if v is None:
-        return False
-    if v.element == x:
-        return True
-    elif x > v.element:
-        return contains(v.right, x)
-    else:
-        return contains(v.left, x)
-
-
-# hvor mange elementer er det i treet?
-def size(v):
-    if v is None:
-        return 0
-    return 1 + size(v.venstre) + size(v.høyre)
-
-
-def Balance(v):
-    if BalanceFactor(v) < -1:
-        if BalanceFactor(v.right) > 0:
-            v.right = RightRotate(v.right)
-
-            return LeftRotate(v)
-    if BalanceFactor(v) > 1:
-        if BalanceFactor(v.left) < 0:
-            v.left = LeftRotate(v.left)
-        return RightRotate(v)
-    return v
-        
-def BalanceFactor(v):
-    if v is None:
-        return 0
-    return Height(v.left)-Height(v.right) #regner ut forskjellen på høyden mellom subtrærene
-
-def Height(v):
-    h = -1
-    if v is None:
-        return h
-    return v.height
-
-def SetHeight(v):
-    if v is None:
-        return
-    v.height = 1 + Max(Height(v.left), Height(v.right))
-
-def Max(h1, h2):
-    if h1 > h2:
-        return h1
-    else:
-        return h2
+    # hvor mange elementer er det i treet?
+    def size(self, v):
+        if v is None:
+            return 0
+        return v.size
     
-def LeftRotate(v):
-    y = v.right
-    z = y.left
 
-    y.left = v
-    v.right = z
+    def Balance(self, v):
+        if self.BalanceFactor(v) < -1:
+            if self.BalanceFactor(v.right) > 0:
+                v.right = self.RightRotate(v.right)
 
-    SetHeight(v)
-    SetHeight(y)
-
-    return y
-
-def RightRotate(v):
-    y = v.left
-    z = y.right
-
-    y.right = v
-    v.left = z
-
-    SetHeight(v)
-    SetHeight(y)
-
-    return y
-
-#input
-
-def sjekkKommando(kommando, v):
-        if kommando == "contains":
-            return contains(v)
-        if kommando == "insert":
-            return insert(v)
-        if kommando == "remove":
-            return remove(v)
-        if kommando == "size":
-            return size()
+                return self.LeftRotate(v)
+        if self.BalanceFactor(v) > 1:
+            if self.BalanceFactor(v.left) < 0:
+                v.left = self.LeftRotate(v.left)
+            return self.RightRotate(v)
+        return v
             
-print("Hei! Skriv din kommando:")
-full_input = sys.stdin.read()
+    def BalanceFactor(self, v):
+        if v is None:
+            return 0
+        return self.Height(v.left)-self.Height(v.right) #regner ut forskjellen på høyden mellom subtrærene
+
+    def Height(self,v):
+        h = -1
+        if v is None:
+            return h
+        return v.height
+
+    def SetHeight(self,v):
+        if v is None:
+            return
+        v.height = 1 + self.Max(self.Height(v.left), self.Height(v.right))
+
+    def Max(self, h1, h2):
+        if h1 > h2:
+            return h1
+        else:
+            return h2
+        
+    def LeftRotate(self,v):
+        y = v.right
+        z = y.left
+
+        y.left = v
+        v.right = z
+
+        self.SetHeight(v)
+        self.SetHeight(y)
+
+        return y
+
+    def RightRotate(self,v):
+        y = v.left
+        z = y.right
+
+        y.right = v
+        v.left = z
+
+        self.SetHeight(v)
+        self.SetHeight(y)
+
+        return y
+
+    #stdin - legge inn kommando til en fil eller skrive inn i terminal manuelt
+    def sjekkKommando(self, kommando, x):
+            global root
+            if kommando == "contains":
+                print(self.contains(self.root, x))
+            if kommando == "insert":
+                self.root = self.insert(self.root, x)
+            if kommando == "remove":
+                self.root = self.Remove(self.root, x)
+            if kommando == "size":
+                print(self.size(self.root))
+
+            #if setning for å sjekke om treet klarer å balansere seg
+            if kommando == "diff":
+                print(self.BalanceFactor(self.root))
+            if kommando == "height":
+                print(self.Height(self.root))
+                
+tre = AVL_Set()
+print("Hei! Vennligst legg inn kommandoene dine her:")
+full_input = sys.stdin.read().splitlines()
 antall_kommandoer = int(full_input[0])
-for line in full_input[1:].splitlines():
-    line = line.split(" ")
-    sjekkKommando(line[0], int(line[1]))
+for line in full_input[1:]:
+    deler = line.split()
+    if len(deler) == 1:
+        tre.sjekkKommando(deler[0], 0)
+    elif len(deler) == 2:
+        tre.sjekkKommando(deler[0], int(deler[1]))
+    else:
+        break
