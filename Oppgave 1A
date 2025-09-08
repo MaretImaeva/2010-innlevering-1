@@ -1,80 +1,102 @@
-class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
+import sys
 
-#insert, size, remove og contains:
-
-def insert (v,x):
-    if v is None:
-        return Node(x)
-        
-    elif x < v.element:
-        v.left = insert(v.left,x)
-        # print(f"Adding to left")
-    elif x > v.element:
-        v.right = insert(v.right,x)
-        # print(f"Adding to right")
-    return v
+class Set:
+    def __init__(self):
+        self.root = None
+        #Instansvariabel til en rot i treet
 
 
-def FindMin(x):
-    if x.left is None:
-        return x
-    return FindMin(x.left)
+    class Node:
+        def __init__(self, element):
+            self.element = element
+            self.left = None
+            self.right = None
+            self.size = 1
 
+    #insert, size, remove og contains:
 
-def Remove(v,x):
-    if v is None:
-        return None
-    elif x < v.element:
-        v.left = Remove(v.left,x)
-        return v
-    elif x > v.element:
-        v.right = Remove(v.right,x)
-        return v
-    elif v.left is None:
-        return v.left
-    u = FindMin(v.right)
-    v.element = u.element
-    v.right = Remove(v.right, u.element)
-    return v
-
-
-#er x med i treet?
-def contains(v, x):
-    if v is None:
-        return False
-    if v.element == x:
-        return True
-    elif x > v.element:
-        return contains(v.right, x)
-    else:
-        return contains(v.left, x)
-
-
-# hvor mange elementer er det i treet?
-def size(v):
-    if v is None:
-        return 0
-    return 1 + size(v.venstre) + size(v.høyre)
-
-
-#stdin - legge inn kommando til en fil eller skrive inn i terminal manuelt
-def sjekkKommando(kommando, v):
-        if kommando == "contains":
-            return contains(v)
-        if kommando == "insert":
-            return insert(v)
-        if kommando == "remove":
-            return remove(v)
-        if kommando == "size":
-            return size()
+    def insert (self,v,x):
+        if v is None:
+            return self.Node(x)
             
-print("Hei! Vennligst skriv ant kommandoer og deretter hvilke")
-full_input = sys.stdin.read()
+        elif x < v.element:
+            v.left = self.insert(v.left,x)
+            # print(f"Adding to left")
+        elif x > v.element:
+            v.right = self.insert(v.right,x)
+            # print(f"Adding to right")
+
+        #Oppdaterer size
+        v.size = 1 + (v.left.size if v.left else 0) + (v.right.size if v.right else 0)
+        return v
+
+
+    def FindMin(self, x):
+        if x.left is None:
+            return x
+        return self.FindMin(x.left)
+
+
+    def Remove(self,v,x):
+        if v is None:
+            return None
+        elif x < v.element:
+            v.left = self.Remove(v.left,x)
+            return v
+        elif x > v.element:
+            v.right = self.Remove(v.right,x)
+            return v
+        elif v.left is None:
+            return v.right
+        u = FindMin(v.right)
+        v.element = u.element
+        v.right = self.Remove(v.right, u.element)
+        
+        #Oppdaterer size
+        v.size = 1 + (v.left.size if v.left else 0) + (v.right.size if v.right else 0)
+        return v
+
+
+    #er x med i treet?
+    def contains(self,v, x):
+        if v is None:
+            return False
+        if v.element == x:
+            return True
+        elif x > v.element:
+            return self.contains(v.right, x)
+        else:
+            return self.contains(v.left, x)
+
+
+    # hvor mange elementer er det i treet?
+    def size(self, v):
+        if v is None:
+            return 0
+        return v.size
+
+
+    #stdin - legge inn kommando til en fil eller skrive inn i terminal manuelt
+    def sjekkKommando(self, kommando, x):
+            global root
+            if kommando == "contains":
+                print(self.contains(self.root, x))
+            if kommando == "insert":
+                self.root = self.insert(self.root, x)
+            if kommando == "remove":
+                self.root = self.Remove(self.root, x)
+            if kommando == "size":
+                print(self.size(self.root))
+                
+tre = Set()
+print("Hei! Vennligst legg inn kommandoene dine her:")
+full_input = sys.stdin.read().splitlines()
 antall_kommandoer = int(full_input[0])
-for line in full_input[1:].splitlines():
-    line = line.split(" ")
-    sjekkKommando(line[0], int(line[1]))
+for line in full_input[1:]:
+    deler = line.split()
+    if len(deler) == 1:
+        tre.sjekkKommando(deler[0], 0)
+    elif len(deler) == 2:
+        tre.sjekkKommando(deler[0], int(deler[1]))
+    else:
+        break
