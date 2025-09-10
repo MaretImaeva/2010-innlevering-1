@@ -142,7 +142,10 @@ def main():
         if not deler:
             continue
         kommando = deler[0]
-        x = int(deler[1]) if len(deler)>=2 else None
+        if len(deler)>=2:
+            x=int(deler[1])
+        else:
+            x= None
         root = sjekk(root,kommando, x)
 
 
