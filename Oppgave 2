@@ -10,7 +10,7 @@ procedure selvbalanserende (array)
     selvbalanserende(array fra midt +1 til slutt)
     selvbalanserende(array fra misdt-1 til slutt)
 
-2b) implementering av peseudokoden
+implementering av peseudokoden
 
 import sys
 def print_balanserende(array, start, slutt):
