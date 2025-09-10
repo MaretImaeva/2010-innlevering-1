@@ -1,0 +1,21 @@
+
+import heapq
+import sys
+
+liste = list(map(int,sys.stdin.read().split()))
+
+#konvertere til heap
+heapq.heapify(liste)
+print(liste)
+
+
+
+def parent_Index(i):
+    return (i+1)//2
+
+def left_child_index(i):
+    2*i + 1
+
+def right_child_index(i):
+    2*i + 2
+    
