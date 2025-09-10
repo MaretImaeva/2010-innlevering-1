@@ -32,6 +32,8 @@ class Set:
 
 
     def FindMin(self, x):
+        if x is None:
+            return
         if x.left is None:
             return x
         return self.FindMin(x.left)
@@ -48,7 +50,9 @@ class Set:
             return v
         elif v.left is None:
             return v.right
-        u = FindMin(v.right)
+        elif v.right is None:
+            return v
+        u = self.FindMin(v.right)
         v.element = u.element
         v.right = self.Remove(v.right, u.element)
         
