@@ -31,27 +31,34 @@ class AVL_Set:
         return self.FindMin(x.left)
 
 
+    def FindMin(self, x):
+        if x is None:
+            return
+        if x.left is None:
+            return x
+        return self.FindMin(x.left)
 
-    def Remove(self, v, x):
+
+    def Remove(self,v,x):
         if v is None:
             return None
-        if x < v.element:
-            v.left = self.Remove(v.left, x)
+        elif x < v.element:
+            v.left = self.Remove(v.left,x)
+            return v
         elif x > v.element:
-            v.right = self.Remove(v.right, x)
+            v.right = self.Remove(v.right,x)
+            return v
         elif v.left is None:
-            v = v.right
+            return v.right
         elif v.right is None:
-            v = v.left
-        else:
-            u = self.FindMin(v.right)
-            v.element = u.element
-            v.right = self.Remove(v.right, u.element)
+            return v
+        u = self.FindMin(v.right)
+        v.element = u.element
+        v.right = self.Remove(v.right, u.element)
         
+        #Oppdaterer size
         v.size = 1 + (v.left.size if v.left else 0) + (v.right.size if v.right else 0)
-
-        self.SetHeight(v)
-        return self.Balance(v)
+        return v
 
 
     def contains(self,v, x):
