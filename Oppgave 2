@@ -1,1 +1,28 @@
+2a) pseudokode 
 
+procedure selvbalanserende (array)
+    if array == NULL then
+        return 
+
+    midt = array.lenght/2
+
+    print(array[midt])
+    selvbalanserende(array fra midt +1 til slutt)
+    selvbalanserende(array fra misdt-1 til slutt)
+
+2b) implementering av peseudokoden
+
+import sys
+def print_balanserende(array, start, slutt):
+    if start> slutt:
+        return
+    midt = (start + slutt)//2
+    print(array[midt])
+
+    print_balanserende(array, midt+1, slutt)  
+    print_balanserende(array, start, midt-1) 
+
+
+if __name__ == "__main__":
+    arr = list(map(int, sys.stdin.read().split()))
+    print_balanserende(arr, 0, len(arr)-1)
