@@ -1,4 +1,10 @@
+Pseudokode:
 
+
+
+
+
+Implementasjon av pesudokoden:
 import heapq
 import sys
 
