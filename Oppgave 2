@@ -16,7 +16,7 @@ import sys
 def print_balanserende(array, start, slutt):
     if start> slutt:
         return
-    midt = (start + slutt)//2
+    midt = (start + slutt+1)//2
     print(array[midt])
 
     print_balanserende(array, midt+1, slutt)  
