@@ -1,0 +1,36 @@
+import sys
+import heapq
+
+heap = list(map(int, sys.stdin.read().split()))
+heapq.heapify(heap)
+
+def balansert(heap):
+    if not heap:
+        return
+    
+    sortert_liste = []
+
+    while heap:
+        sortert_liste.append(heapq.heappop(heap))
+
+    midt = len(sortert_liste)//2 #velger øvre midten
+    print(sortert_liste[midt])          #skriver ut roten først
+
+    #Lage nye heaps for venstre og høyre side
+    venstre_heap = [] 
+    høyre_heap = []
+
+    for element in sortert_liste[:midt]:
+        heapq.heappush(venstre_heap, element)
+
+    for element in sortert_liste[midt +1:]:
+        heapq.heappush(høyre_heap, element)
+    
+    
+    balansert(høyre_heap)
+    balansert(venstre_heap)
+
+balansert(heap)
+
+
+
