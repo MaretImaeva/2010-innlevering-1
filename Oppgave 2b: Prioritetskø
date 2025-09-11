@@ -1,6 +1,30 @@
 Pseudokode:
 
+procedure balansert(heap);
+    if heap== NULL;
+        return
 
+    sortert_liste = []
+    while heap is not empty:
+        element = heap.pop()
+        sortert.add(element)
+
+    midt = len(sortert_liste)//2 #velger øvre midten
+    print(sortert_liste[midt])   #skriver ut roten først
+
+    #Lage nye heaps for venstre og høyre side
+    venstre_heap = tom venstre heap
+    høyre_heap = tom høyre heap
+
+    venstre_liste = elementer til venstre for midt
+    høyre liste = elementer til høyre for midt
+
+    venstre heap = heap med venstre_liste
+    høyre heap = heap med høyre_liste
+    balansert(høyre_heap)
+    balansert(venstre_heap)
+    
+    
 
 
 
@@ -8,20 +32,36 @@ Implementasjon av pesudokoden:
 import heapq
 import sys
 
-liste = list(map(int,sys.stdin.read().split()))
+heap = list(map(int, sys.stdin.read().split()))
 
 #konvertere til heap
-heapq.heapify(liste)
-print(liste)
+heapq.heapify(heap)
 
 
+def balansert(heap):
+    if not heap:
+        return
+    
+    sortert_liste = []
+    while heap:
+        sortert_liste.heappush(heap, heap.pop())
 
-def parent_Index(i):
-    return (i+1)//2
+        midt = len(sortert_liste)//2 #velger øvre midten
+        print(sortert_liste[midt])          #skriver ut roten først
 
-def left_child_index(i):
-    2*i + 1
+        #Lage nye heaps for venstre og høyre side
+        venstre_heap = [] 
+        høyre_heap = []
 
-def right_child_index(i):
-    2*i + 2
+        for element in sortert_liste[:midt]:
+            heap.heappush(venstre_heap, element)
+
+        for element in sortert_liste[midt +1:]:
+            heap.heappush(høyre_heap, element)
+    
+    
+        balansert(høyre_heap)
+        balansert(venstre_heap)
+
+balansert(heap)
     
