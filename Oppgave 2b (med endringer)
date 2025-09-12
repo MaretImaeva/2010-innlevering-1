@@ -1,3 +1,41 @@
+'#PSEUDOKODE: 
+procedure balansert(heap):
+    if heap is Null do:
+        return
+
+    #opprett tom liste
+
+    sortert = []
+    while heap is not empty do
+        element = heappop(heap)
+        sortert.add(element)
+
+    midt = len(sortert)//2
+    print(sortert[midt])
+
+    #lage nye heaps
+
+    venstre = []
+    høyre = []
+
+    for e in sortert[midt+1] do
+        heappust(venstre)
+
+    for e in sortert[midt-1] do
+        heappust(høyre)
+    
+    balansert(høyre)
+    balansert(venstre)
+balansert(heap)
+
+
+
+
+
+#Implementasjon av pseudo
+
+
+
 import sys
 import heapq
 
