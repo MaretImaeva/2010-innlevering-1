@@ -1,0 +1,27 @@
+def bubbleSort(A):
+    n= len(A)+1  #Den kjører ikke nok ganger idk why, men denne redda koden
+    for i in range (n-2): #egt skal det stå n-1 da vil den funke uten å endre n
+        for j in range (0,n-i-2):# samme her
+            if A[j] > A[j+1]:
+                A[j],A[j+1]=A[j+1],A[j]
+    return A
+
+
+print(bubbleSort(liste))
+
+liste = [80,91,33,50,70,13,321,12]
+
+print(selectionSort(liste))
+
+
+
+def insertion(A):
+    n = len(A)
+    for i in range(1,n): #måtte endre til n fordi den ikke kommer til å gå gjennom alle elementene?
+        j=i
+        while j>0 and A[j-1]> A[j]:
+            A[j-1], A[j]=A[j],A[j-1]
+            j=j-1
+    return A
+
+print(insertion(liste))
