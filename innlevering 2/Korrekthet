@@ -1,0 +1,82 @@
+#selectionsort
+#bubbleSort
+#insertionSort
+
+
+
+def selectionSort(A):
+    txt = open(A, "r")
+    A = []
+
+    while True:
+        line = txt.readline()
+        if not line: 
+            break 
+        A.append(int(line))
+
+        n=len(A)
+        for i in range(n-1):
+            k=i
+            for j in range (i+1,n):
+                if A[j]<A[k]:
+                    k=j
+            if i != k:
+                A[i],A[k] = A[k],A[i]
+                
+        f = open("example_selection.out.txt", "w")
+        for i in range(len(A)):
+            numb=str(A[i])
+            f.write(numb+ "\n")
+    txt.close()
+    return "Lager en ny fil som heter 'example_selection.out.txt' "
+
+def bubbleSort(A):
+    n= len(A)+1  
+    txt = open(A, "r")
+    A = []
+
+    while True:
+        line = txt.readline()
+        if not line: 
+            break 
+        A.append(int(line))
+
+    for i in range (n-2): 
+        for j in range (0,n-i-2):
+            if A[j] > A[j+1]:
+                A[j],A[j+1]=A[j+1],A[j]
+    f = open("example_bubbleSort.out.txt", "w")
+    for i in range(len(A)):
+        numb=str(A[i])
+        f.write(numb+ "\n")
+    return "Lager en ny fil som heter 'example_bubbleSort.out.txt' "
+
+
+def insertion(A):
+    n = len(A)
+    f = open("example_insertion.out.txt", "w")
+    txt = open(A, "r")
+    A = []
+
+    while True:
+        line = txt.readline()
+        if not line: 
+            break 
+        A.append(int(line))
+
+
+    for i in range(1,n): #måtte endre til n fordi den ikke kommer til å gå gjennom alle elementene?
+        j=i
+        while j>0 and A[j-1]> A[j]:
+            A[j-1], A[j]=A[j],A[j-1]
+            j=j-1
+    for i in range(len(A)):
+        numb=str(A[i])
+        f.write(numb+ "\n")
+    return "Lager en ny fil som heter 'example_insertion.out.txt' "
+
+
+print(bubbleSort("input.txt"))
+print(insertion("input.txt"))
+print(selectionSort("input.txt"))
+
