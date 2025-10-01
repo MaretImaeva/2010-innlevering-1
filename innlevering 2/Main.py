@@ -1,9 +1,140 @@
-filnavn = input("Vennligst legg ved din fil:\n")
+from Merge import MergeSort
 
-with open(filnavn+"_merge.out", "w") as file:
-    # Write content to the file
-    file.write("This is the first line.\n")
-    file.write("This is the second line.")
+#MergeSort:
+import time
 
-print("Content written to my_file.txt (overwriting if it existed).")
-  
+
+def MergeSort(A):
+    n = len(A)
+    if n <= 1:
+        return A
+    i = (n//2)
+    Array1 = MergeSort(A[:i])
+    Array2 = MergeSort(A[i:])
+    return Merge(Array1, Array2, A)
+
+
+def Merge(Array1, Array2, A):
+    i = 0
+    j = 0
+    while i < len(Array1) and j < len(Array2):
+        if Array1[i] <= Array2[j]:
+            A[i+j] = Array1[i]
+            i = i + 1
+        else:
+            A[i+j] = Array2[j]
+            j = j + 1
+    while i < len(Array1):
+        A[i + j] = Array1[i]
+        i = i + 1
+    while j < len(Array2):
+        A[i + j] = Array2[j]
+        j = j + 1
+    return A
+#ferdig mergesort
+
+
+#Quicksort:
+def ChoosePivot(A, low, high):
+    midt= (low + high)//2
+
+    a = A[low]
+    b = A[midt]
+    c = A[high]
+
+    if (a<= b <=c ) or (c<= b <= a):
+        return midt
+    elif (b<= a<= c) or (c<= a <= b):
+        return low
+    else:
+        return high
+
+
+def Partition(A, low, high):
+    p = ChoosePivot(A, low, high)
+    A[p], A[high] = A[high], A[p]
+
+    pivot = A[high]
+    left = low
+    right = high - 1
+
+    while left <= right:
+        while left <= right and A[left] <= pivot:
+            left = left +1
+        while right >= left and A[right] >= pivot:
+            right = right-1
+        if left < right:
+            A[left], A[right] = A[right], A[left]
+            left+=1
+            right-=1
+    A[left], A[high] = A[high], A[left]
+
+    return left
+
+def Quicksort(A, low, high):
+    if low >= high:
+        return A
+    
+    p = Partition(A, low, high)
+    Quicksort(A, low, p-1)
+    Quicksort(A, p+1, high)
+    return A
+
+#ferdig quicksort
+
+
+#bubble og insertion:
+
+def bubbleSort(A):
+    n= len(A)+1  #Den kjører ikke nok ganger idk why, men denne redda koden
+    for i in range (n-2): #egt skal det stå n-1 da vil den funke uten å endre n
+        for j in range (0,n-i-2):# samme her
+            if A[j] > A[j+1]:
+                A[j],A[j+1]=A[j+1],A[j]
+    return A
+
+
+def insertion(A):
+    n = len(A)
+    for i in range(1,n): #måtte endre til n fordi den ikke kommer til å gå gjennom alle elementene?
+        j=i
+        while j>0 and A[j-1]> A[j]:
+            A[j-1], A[j]=A[j],A[j-1]
+            j=j-1
+    return A
+
+#ferdig bubble og insertion
+
+
+filnavn = input("Vennligst legg ved din fil:\n ")
+
+array = []
+with open(filnavn, "r") as f:
+    lesfil = f.read().split()
+    for line in lesfil:
+        array.append(int(line))
+
+
+sortertMerg = MergeSort(array)
+with open(filnavn + "_merge.out", "w") as file:
+    sortert = MergeSort(array)
+    for i in sortert:
+        file.write("\n"+(str(i)))
+
+
+with open(filnavn + "_bubble.out", "w") as file:
+    sortert = bubbleSort(array)
+    for i in sortert:
+        file.write("\n"+(str(i)))
+
+
+with open(filnavn + "_insertion.out", "w") as file:
+    sortert = insertion(array)
+    for i in sortert:
+        file.write("\n"+(str(i)))
+
+
+with open(filnavn + "_Quicksort.out", "w") as file:
+    sortert = Quicksort(array,0,len(array)-1)
+    for i in sortert:
+        file.write("\n"+(str(i)))
