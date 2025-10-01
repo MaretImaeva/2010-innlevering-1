@@ -80,8 +80,7 @@ def Quicksort(A, low, high):
     Quicksort(A, p+1, high)
     return A
 
-#ferdig quicksort
-
+#end quicksort
 
 #bubble og insertion:
 
@@ -115,26 +114,27 @@ with open(filnavn, "r") as f:
         array.append(int(line))
 
 
-sortertMerg = MergeSort(array)
 with open(filnavn + "_merge.out", "w") as file:
-    sortert = MergeSort(array)
+    sortert = MergeSort(array.copy())
     for i in sortert:
         file.write("\n"+(str(i)))
 
 
 with open(filnavn + "_bubble.out", "w") as file:
-    sortert = bubbleSort(array)
+    sortert = bubbleSort(array.copy())
     for i in sortert:
         file.write("\n"+(str(i)))
 
 
 with open(filnavn + "_insertion.out", "w") as file:
-    sortert = insertion(array)
+    sortert = insertion(array.copy())
     for i in sortert:
         file.write("\n"+(str(i)))
 
 
-with open(filnavn + "_Quicksort.out", "w") as file:
-    sortert = Quicksort(array,0,len(array)-1)
+with open(filnavn + "_quicksort.out", "w") as file:
+    sortert = Quicksort(array.copy(),0,len(array)-1)
     for i in sortert:
         file.write("\n"+(str(i)))
+
+print(array)
