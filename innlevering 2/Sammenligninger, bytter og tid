@@ -1,3 +1,96 @@
+# from Merge import MergeSort
+
+#MergeSort:
+import time
+t = time.time_ns()
+
+timeus = (time.time_ns()-t)/1000
+
+
+
+
+
+def MergeSort(A):
+    n = len(A)
+    if n <= 1:
+        return A
+    i = (n//2)
+    Array1 = MergeSort(A[:i])
+    Array2 = MergeSort(A[i:])
+    return Merge(Array1, Array2, A)
+
+
+def Merge(Array1, Array2, A):
+    i = 0
+    j = 0
+    while i < len(Array1) and j < len(Array2):
+        if Array1[i] <= Array2[j]:
+            A[i+j] = Array1[i]
+            i = i + 1
+        else:
+            A[i+j] = Array2[j]
+            j = j + 1
+    while i < len(Array1):
+        A[i + j] = Array1[i]
+        i = i + 1
+    while j < len(Array2):
+        A[i + j] = Array2[j]
+        j = j + 1
+    return A
+#ferdig mergesort
+
+
+#Quicksort:
+def ChoosePivot(A, low, high):
+    midt= (low + high)//2
+
+    a = A[low]
+    b = A[midt]
+    c = A[high]
+
+    if (a<= b <=c ) or (c<= b <= a):
+        return midt
+    elif (b<= a<= c) or (c<= a <= b):
+        return low
+    else:
+        return high
+
+
+def Partition(A, low, high):
+    p = ChoosePivot(A, low, high)
+    A[p], A[high] = A[high], A[p]
+
+    pivot = A[high]
+    left = low
+    right = high - 1
+
+    while left <= right:
+        while left <= right and A[left] <= pivot:
+            left = left +1
+        while right >= left and A[right] >= pivot:
+            right = right-1
+        if left < right:
+            A[left], A[right] = A[right], A[left]
+            left+=1
+            right-=1
+    A[left], A[high] = A[high], A[left]
+
+    return left
+
+def Quicksort(A, low, high):
+    if low >= high:
+        return A
+    
+    p = Partition(A, low, high)
+    Quicksort(A, low, p-1)
+    Quicksort(A, p+1, high)
+    return A
+
+#end quicksort
+
+#bubble og insertion:
+
+
 def bubbleSort(A):
     n= len(A)+1  
     swap = 0
@@ -23,3 +116,49 @@ def insertion(A):
             swap+=1
         comp+=1
     return swap,comp
+
+#ferdig bubble og insertion
+
+
+filnavn = input("Vennligst legg ved din fil:\n ")
+
+array = []
+with open(filnavn, "r") as f:
+    st = time.time_ns()
+    lesfil = f.read().split()
+    for line in lesfil:
+        array.append(int(line))
+et=time.time_ns()
+
+
+with open(filnavn + "_merge.out", "w") as file:
+    st = time.time_ns()
+    sortert = MergeSort(array.copy())
+    for i in sortert:
+        file.write("\n"+(str(i)))
+et=time.time_ns()
+
+with open(filnavn + "_bubble.out", "w") as file:
+    st = time.time_ns()
+    sortert = bubbleSort(array.copy())
+    for i in sortert:
+        file.write("\n"+(str(i)))
+et=time.time_ns()
+
+with open(filnavn + "_insertion.out", "w") as file:
+    st = time.time_ns()
+    sortert = insertion(array.copy())
+    for i in sortert:
+        file.write("\n"+(str(i)))
+et=time.time_ns()
+
+with open(filnavn + "_quicksort.out", "w") as file:
+    st = time.time_ns()
+    sortert = Quicksort(array.copy(),0,len(array)-1)
+    for i in sortert:
+        file.write("\n"+(str(i)))
+et=time.time_ns()
+
+
+tid=(et-st)/1000
+print(array,tid)
