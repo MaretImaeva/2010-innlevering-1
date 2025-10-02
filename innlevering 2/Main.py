@@ -137,4 +137,3 @@ with open(filnavn + "_quicksort.out", "w") as file:
     for i in sortert:
         file.write("\n"+(str(i)))
 
-print(array)
