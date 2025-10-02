@@ -41,6 +41,11 @@ def Merge(Array1, Array2, A):
 
 
 #Quicksort:
+
+comp = 0
+swap = 0
+
+
 def ChoosePivot(A, low, high):
     midt= (low + high)//2
 
@@ -57,8 +62,11 @@ def ChoosePivot(A, low, high):
 
 
 def Partition(A, low, high):
+    global comp, swap
+
     p = ChoosePivot(A, low, high)
     A[p], A[high] = A[high], A[p]
+    swap+=1
 
     pivot = A[high]
     left = low
@@ -66,18 +74,26 @@ def Partition(A, low, high):
 
     while left <= right:
         while left <= right and A[left] <= pivot:
+            comp+=1
             left = left +1
         while right >= left and A[right] >= pivot:
+            comp+=1
             right = right-1
         if left < right:
+            comp+=1
             A[left], A[right] = A[right], A[left]
+            swap+=1
             left+=1
             right-=1
     A[left], A[high] = A[high], A[left]
+    swap+=1
 
     return left
 
 def Quicksort(A, low, high):
+    global comp, swap
+
+    comp+=1
     if low >= high:
         return A
     
