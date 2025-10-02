@@ -2,13 +2,6 @@
 
 #MergeSort:
 import time
-t = time.time_ns()
-
-timeus = (time.time_ns()-t)/1000
-
-
-
-
 
 def MergeSort(A):
     n = len(A)
@@ -23,20 +16,27 @@ def MergeSort(A):
 def Merge(Array1, Array2, A):
     i = 0
     j = 0
+    comp=0
+    swap=0
     while i < len(Array1) and j < len(Array2):
+        comp+=1
         if Array1[i] <= Array2[j]:
             A[i+j] = Array1[i]
             i = i + 1
+            swap+=1
         else:
             A[i+j] = Array2[j]
             j = j + 1
+            swap+=1
     while i < len(Array1):
         A[i + j] = Array1[i]
         i = i + 1
+        swap+=1
     while j < len(Array2):
         A[i + j] = Array2[j]
         j = j + 1
-    return A
+        swap+=1
+    return A,comp,swap
 #ferdig mergesort
 
 
@@ -115,7 +115,7 @@ def insertion(A):
             j=j-1
             swap+=1
         comp+=1
-    return swap,comp
+    return A,swap,comp
 
 #ferdig bubble og insertion
 
@@ -134,31 +134,37 @@ et=time.time_ns()
 with open(filnavn + "_merge.out", "w") as file:
     st = time.time_ns()
     sortert = MergeSort(array.copy())
+    et=time.time_ns()
     for i in sortert:
         file.write("\n"+(str(i)))
-et=time.time_ns()
+    tid=(et-st)/1000
+    print("MergeSort brukte", tid, " mikrosekunder")
 
 with open(filnavn + "_bubble.out", "w") as file:
     st = time.time_ns()
     sortert = bubbleSort(array.copy())
+    et=time.time_ns()
     for i in sortert:
         file.write("\n"+(str(i)))
-et=time.time_ns()
+    tid=(et-st)/1000
+    print("BubbleSort brukte", tid, " mikrosekunder")
+
 
 with open(filnavn + "_insertion.out", "w") as file:
     st = time.time_ns()
     sortert = insertion(array.copy())
+    et=time.time_ns()
     for i in sortert:
         file.write("\n"+(str(i)))
-et=time.time_ns()
+    print("InsertionSort brukte", tid, " mikrosekunder")
 
 with open(filnavn + "_quicksort.out", "w") as file:
     st = time.time_ns()
     sortert = Quicksort(array.copy(),0,len(array)-1)
     for i in sortert:
         file.write("\n"+(str(i)))
-et=time.time_ns()
+    et=time.time_ns()
+
+    print("QuickSort brukte", tid, " mikrosekunder")
 
 
-tid=(et-st)/1000
-print(array,tid)
