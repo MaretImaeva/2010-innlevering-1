@@ -3,6 +3,7 @@ import csv
 import os
 
 # ================= MergeSort =================
+
 def MergeSort(A):
     n = len(A)
     if n <= 1:
@@ -135,34 +136,35 @@ with open(filnavn+"_results.csv", "w", newline="") as file:
                      "quicksort_cmp", "quicksort_swaps", "quicksort_time_us",
                      "bubble_cmp", "bubble_swaps", "bubble_time_us",
                      "insertion_cmp", "insertion_swaps", "insertion_time_us"))
+    
 
     # ================= MergeSort =================
     m_comp = m_swap = 0
     m_t = time.time_ns()
     sorted_merge = MergeSort(array.copy())
     m_time = (time.time_ns() - m_t) / 1000
-    print("MergeSort:", sorted_merge, "cmp:", m_comp, "swaps:", m_swap)
+    print("MergeSort:", sorted_merge, "cmp:", m_comp, "swaps:", m_swap, "tid ", m_time)
 
     # ================= QuickSort =================
     q_comp = q_swap = 0
     q_t = time.time_ns()
     sorted_quick = Quicksort(array.copy(), 0, len(array)-1)
     q_time = (time.time_ns() - q_t) / 1000
-    print("QuickSort:", sorted_quick, "cmp:", q_comp, "swaps:", q_swap)
+    print("QuickSort:", sorted_quick, "cmp:", q_comp, "swaps:", q_swap, "tid ", q_time)
 
     # ================= BubbleSort =================
     b_comp = b_swap = 0
     b_t = time.time_ns()
     sorted_bubble = BubbleSort(array.copy())
     b_time = (time.time_ns() - b_t) / 1000
-    print("BubbleSort:", sorted_bubble, "cmp:", b_comp, "swaps:", b_swap)
+    print("BubbleSort:", sorted_bubble, "cmp:", b_comp, "swaps:", b_swap, "tid ", b_time)
 
     # ================= InsertionSort =================
     i_comp = i_swap = 0
     i_t = time.time_ns()
     sorted_insertion = InsertionSort(array.copy())
     i_time = (time.time_ns() - i_t) / 1000
-    print("InsertionSort:", sorted_insertion, "cmp:", i_comp, "swaps:", i_swap)
+    print("InsertionSort:", sorted_insertion, "cmp:", i_comp, "swaps:", i_swap, "tid: ", i_time)
 
     # Skriv til CSV
     writer.writerow([len(array),
