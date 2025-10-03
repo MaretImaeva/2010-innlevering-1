@@ -7,11 +7,6 @@ def bubbleSort(A):
     return A
 
 
-print(bubbleSort(liste))
-
-liste = [80,91,33,50,70,13,321,12]
-
-print(selectionSort(liste))
 
 
 
@@ -24,4 +19,4 @@ def insertion(A):
             j=j-1
     return A
 
-print(insertion(liste))
+
