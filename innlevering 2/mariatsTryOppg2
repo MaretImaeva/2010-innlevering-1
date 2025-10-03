@@ -150,18 +150,3 @@ with open(filnavn, "r") as f:
 
             writer.writerow([len(array), m_comp, m_swap, m_timeus, q_comp, q_swap, q_timeus])
 
-"""
-import time
-import csv
-t = time.time_ns()
-with open(filnavn+"_results", "w", newline="") as file:
-    writer = csv.writer(file)
-    writer.writerow(("n", "merge_cmp", "merge_swaps", "merge_time", "quicksort_cmp", "quicksort_swaps", "quicksort_time"))
-    
-    sortert = MergeSort(array.copy())
-    m_timeus = (time.time_ns() - t) / 1000
-
-    m_print = [len(array), m_comp, m_swap, m_timeus]
-    for i in m_print:
-        file.write(str(i)+",")
-"""
