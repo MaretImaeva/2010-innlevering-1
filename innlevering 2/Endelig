@@ -1,0 +1,174 @@
+import time
+import csv
+import os
+
+# ================= MergeSort =================
+def MergeSort(A):
+    n = len(A)
+    if n <= 1:
+        return A
+    i = n // 2
+    Array1 = MergeSort(A[:i])
+    Array2 = MergeSort(A[i:])
+    return Merge(Array1, Array2, A)
+
+def Merge(Array1, Array2, A):
+    global m_swap, m_comp
+    i = j = 0
+    while i < len(Array1) and j < len(Array2):
+        m_comp += 1
+        if Array1[i] <= Array2[j]:
+            m_swap += 1
+            A[i+j] = Array1[i]
+            i += 1
+        else:
+            m_swap += 1
+            A[i+j] = Array2[j]
+            j += 1
+    while i < len(Array1):
+        A[i+j] = Array1[i]
+        i += 1
+        m_swap += 1
+    while j < len(Array2):
+        A[i+j] = Array2[j]
+        j += 1
+        m_swap += 1
+    return A
+
+# ================= QuickSort =================
+def ChoosePivot(A, low, high):
+    global q_comp
+    midt = (low + high) // 2
+    a, b, c = A[low], A[midt], A[high]
+
+    if (a <= b <= c) or (c <= b <= a):
+        q_comp += 2
+        return midt
+    elif (b <= a <= c) or (c <= a <= b):
+        q_comp += 2
+        return low
+    else:
+        return high
+
+def Partition(A, low, high):
+    global q_swap, q_comp
+    p = ChoosePivot(A, low, high)
+    A[p], A[high] = A[high], A[p]
+    q_swap += 1
+
+    pivot = A[high]
+    left = low
+    right = high - 1
+
+    while left <= right:
+        while left <= right and A[left] <= pivot:
+            q_comp += 1
+            left += 1
+        while right >= left and A[right] >= pivot:
+            q_comp += 1
+            right -= 1
+        if left < right:
+            A[left], A[right] = A[right], A[left]
+            q_swap += 1
+            left += 1
+            right -= 1
+    A[left], A[high] = A[high], A[left]
+    q_swap += 1
+    return left
+
+def Quicksort(A, low, high):
+    global q_comp
+    if low >= high:
+        q_comp += 1
+        return A
+    p = Partition(A, low, high)
+    Quicksort(A, low, p-1)
+    Quicksort(A, p+1, high)
+    return A
+
+# ================= BubbleSort =================
+def BubbleSort(A):
+    global b_swap, b_comp
+    n = len(A)
+    for i in range(n-1):
+        for j in range(n-1-i):
+            b_comp += 1
+            if A[j] > A[j+1]:
+                A[j], A[j+1] = A[j+1], A[j]
+                b_swap += 1
+    return A
+
+# ================= InsertionSort =================
+def InsertionSort(A):
+    global i_swap, i_comp
+    n = len(A)
+    for i in range(1, n):
+        j = i
+        while j > 0 and A[j-1] > A[j]:
+            i_comp += 1
+            A[j-1], A[j] = A[j], A[j-1]
+            i_swap += 1
+            j -= 1
+        if j > 0:
+            i_comp += 1
+    return A
+
+# ================= Main =================
+filnavn = input("Vennligst legg ved din fil:\n ")
+
+# Sjekk om filen finnes
+if not os.path.exists(filnavn):
+    print(f"Filen {filnavn} finnes ikke!")
+    exit()
+
+# Les filen
+with open(filnavn, "r") as f:
+    array = [int(x) for x in f.read().replace(",", " ").split()]
+
+print("Input array:", array)
+
+# Åpne CSV
+with open(filnavn+"_results.csv", "w", newline="") as file:
+    writer = csv.writer(file)
+    writer.writerow(("n", 
+                     "merge_cmp", "merge_swaps", "merge_time_us", 
+                     "quicksort_cmp", "quicksort_swaps", "quicksort_time_us",
+                     "bubble_cmp", "bubble_swaps", "bubble_time_us",
+                     "insertion_cmp", "insertion_swaps", "insertion_time_us"))
+
+    # ================= MergeSort =================
+    m_comp = m_swap = 0
+    m_t = time.time_ns()
+    sorted_merge = MergeSort(array.copy())
+    m_time = (time.time_ns() - m_t) / 1000
+    print("MergeSort:", sorted_merge, "cmp:", m_comp, "swaps:", m_swap)
+
+    # ================= QuickSort =================
+    q_comp = q_swap = 0
+    q_t = time.time_ns()
+    sorted_quick = Quicksort(array.copy(), 0, len(array)-1)
+    q_time = (time.time_ns() - q_t) / 1000
+    print("QuickSort:", sorted_quick, "cmp:", q_comp, "swaps:", q_swap)
+
+    # ================= BubbleSort =================
+    b_comp = b_swap = 0
+    b_t = time.time_ns()
+    sorted_bubble = BubbleSort(array.copy())
+    b_time = (time.time_ns() - b_t) / 1000
+    print("BubbleSort:", sorted_bubble, "cmp:", b_comp, "swaps:", b_swap)
+
+    # ================= InsertionSort =================
+    i_comp = i_swap = 0
+    i_t = time.time_ns()
+    sorted_insertion = InsertionSort(array.copy())
+    i_time = (time.time_ns() - i_t) / 1000
+    print("InsertionSort:", sorted_insertion, "cmp:", i_comp, "swaps:", i_swap)
+
+    # Skriv til CSV
+    writer.writerow([len(array),
+                     m_comp, m_swap, m_time,
+                     q_comp, q_swap, q_time,
+                     b_comp, b_swap, b_time,
+                     i_comp, i_swap, i_time])
+
+print(f"Resultater skrevet til {filnavn}_results.csv")
