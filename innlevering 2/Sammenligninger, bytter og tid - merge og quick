@@ -1,0 +1,91 @@
+#Merge
+
+import time
+
+def MergeSort(A):
+    n = len(A)
+    if n <= 1:
+        return A
+    i = (n//2)
+    Array1 = MergeSort(A[:i])
+    Array2 = MergeSort(A[i:])
+    return Merge(Array1, Array2, A)
+
+
+def Merge(left , right, A):
+    i = 0
+    j = 0
+    k = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            A[k] = left[i]
+            i = i + 1
+        else:
+            A[k] = right[j]
+            j = j + 1
+        k +=1
+    while i < len(left):
+        A[k] = left[i]
+        i = i + 1
+        k+=1
+    while j < len(right):
+        A[k] = right[j]
+        j = j + 1
+        k+= 1
+    return A
+
+def sort(A):
+    MergeSort(A)
+    return A
+#end merge
+
+#Quicksort
+def ChoosePivot(A, low, high):
+    midt= (low + high)//2
+
+    a = A[low]
+    b = A[midt]
+    c = A[high]
+
+    if (a<= b <=c ) or (c<= b <= a):
+        return midt
+    elif (b<= a<= c) or (c<= a <= b):
+        return low
+    else:
+        return high
+
+
+def Partition(A, low, high):
+    p = ChoosePivot(A, low, high)
+    A.swap(p, high)
+    pivot = A[high]
+    left = low
+    right = high - 1
+
+    while left <= right:
+        while left <= right and A[left] <= pivot:
+            left = left +1
+        while right >= left and A[right] >= pivot:
+            right = right-1
+        if left < right:
+            A.swap(left, right)
+            left+=1
+            right-=1
+    A.swap(left, high)
+
+    return left
+
+def quicksort(A, low, high):
+    if low >= high:
+        return A
+    
+    p = Partition(A, low, high)
+    quicksort(A, low, p-1)
+    quicksort(A, p+1, high)
+
+    return A
+
+def sort(A):
+    quicksort(A, 0, len(A) - 1)
+    return A
+#end quicksort
