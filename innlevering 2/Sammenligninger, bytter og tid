@@ -1,186 +1,22 @@
-# from Merge import MergeSort
-
-#MergeSort:
-import time
-
-def MergeSort(A):
-    n = len(A)
-    if n <= 1:
-        return A
-    i = (n//2)
-    Array1 = MergeSort(A[:i])
-    Array2 = MergeSort(A[i:])
-    return Merge(Array1, Array2, A)
-
-
-def Merge(Array1, Array2, A):
-    i = 0
-    j = 0
-    comp=0
-    swap=0
-    while i < len(Array1) and j < len(Array2):
-        comp+=1
-        if Array1[i] <= Array2[j]:
-            A[i+j] = Array1[i]
-            i = i + 1
-            swap+=1
-        else:
-            A[i+j] = Array2[j]
-            j = j + 1
-            swap+=1
-    while i < len(Array1):
-        A[i + j] = Array1[i]
-        i = i + 1
-        swap+=1
-    while j < len(Array2):
-        A[i + j] = Array2[j]
-        j = j + 1
-        swap+=1
-    return A,comp,swap
-#ferdig mergesort
-
-
-#Quicksort:
-
-comp = 0
-swap = 0
-
-
-def ChoosePivot(A, low, high):
-    midt= (low + high)//2
-
-    a = A[low]
-    b = A[midt]
-    c = A[high]
-
-    if (a<= b <=c ) or (c<= b <= a):
-        return midt
-    elif (b<= a<= c) or (c<= a <= b):
-        return low
-    else:
-        return high
-
-
-def Partition(A, low, high):
-    global comp, swap
-
-    p = ChoosePivot(A, low, high)
-    A[p], A[high] = A[high], A[p]
-    swap+=1
-
-    pivot = A[high]
-    left = low
-    right = high - 1
-
-    while left <= right:
-        while left <= right and A[left] <= pivot:
-            comp+=1
-            left = left +1
-        while right >= left and A[right] >= pivot:
-            comp+=1
-            right = right-1
-        if left < right:
-            comp+=1
-            A[left], A[right] = A[right], A[left]
-            swap+=1
-            left+=1
-            right-=1
-    A[left], A[high] = A[high], A[left]
-    swap+=1
-
-    return left
-
-def Quicksort(A, low, high):
-    global comp, swap
-
-    comp+=1
-    if low >= high:
-        return A
-    
-    p = Partition(A, low, high)
-    Quicksort(A, low, p-1)
-    Quicksort(A, p+1, high)
-    return A
-
-#end quicksort
-
-#bubble og insertion:
-
-
-def bubbleSort(A):
-    n= len(A)+1  
-    swap = 0
-    comp=0
-    for i in range (n-2): 
-        for j in range (0,n-i-2):
-            comp+=1
-            if A[j] > A[j+1]:
-                A[j],A[j+1]=A[j+1],A[j]
-                swap +=1
-    return swap,comp
+import CountSwaps
 
 def insertion(A):
+    A  = CountSwaps.CountSwaps(A)
     n = len(A)
-    swap = 0
-    comp = 0
     for i in range(1,n): 
         j=i
-        while j>0 and A[j-1]> A[j]:
-            comp+=1
-            A[j-1], A[j]=A[j],A[j-1]
-            j=j-1
-            swap+=1
-        comp+=1
-    return A,swap,comp
+        while j>0 and A[j-1]> A[j]: 
+            A.swap(j-1,j)
+            j-=1
+    return A
 
-#ferdig bubble og insertion
-
-
-filnavn = input("Vennligst legg ved din fil:\n ")
-
-array = []
-with open(filnavn, "r") as f:
-    st = time.time_ns()
-    lesfil = f.read().split()
-    for line in lesfil:
-        array.append(int(line))
-et=time.time_ns()
-
-
-with open(filnavn + "_merge.out", "w") as file:
-    st = time.time_ns()
-    sortert = MergeSort(array.copy())
-    et=time.time_ns()
-    for i in sortert:
-        file.write("\n"+(str(i)))
-    tid=(et-st)/1000
-    print("MergeSort brukte", tid, " mikrosekunder")
-
-with open(filnavn + "_bubble.out", "w") as file:
-    st = time.time_ns()
-    sortert = bubbleSort(array.copy())
-    et=time.time_ns()
-    for i in sortert:
-        file.write("\n"+(str(i)))
-    tid=(et-st)/1000
-    print("BubbleSort brukte", tid, " mikrosekunder")
-
-
-with open(filnavn + "_insertion.out", "w") as file:
-    st = time.time_ns()
-    sortert = insertion(array.copy())
-    et=time.time_ns()
-    for i in sortert:
-        file.write("\n"+(str(i)))
-    print("InsertionSort brukte", tid, " mikrosekunder")
-
-with open(filnavn + "_quicksort.out", "w") as file:
-    st = time.time_ns()
-    sortert = Quicksort(array.copy(),0,len(array)-1)
-    for i in sortert:
-        file.write("\n"+(str(i)))
-    et=time.time_ns()
-
-    print("QuickSort brukte", tid, " mikrosekunder")
-
+def bubbleSort(A):
+    A = CountSwaps.CountSwaps(A)
+    n = len(A)+1
+    for i in range (n-1): #egt skal det stå n-1 da vil den funke uten å endre n
+        for j in range (0,n-i-2):# samme her
+            if A[j] > A[j+1]:
+               A.swap(j,j+1) 
+                # A[j],A[j+1]=A[j+1],A[j]
+    return A
 
