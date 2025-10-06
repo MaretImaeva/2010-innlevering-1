@@ -1,6 +1,4 @@
-
 #MergeSort:
-
 def MergeSort(A):
     n = len(A)
     if n <= 1:
@@ -18,26 +16,23 @@ def Merge(Array1, Array2, A):
     while i < len(Array1) and j < len(Array2):
         m_comp += 1
         if Array1[i] <= Array2[j]:
-            m_swap += 1
             A[i+j] = Array1[i]
             i = i + 1
-        else:
             m_swap += 1
+        else:
             A[i+j] = Array2[j]
             j = j + 1
     while i < len(Array1):
         A[i + j] = Array1[i]
         i = i + 1
-        m_swap += 1
     while j < len(Array2):
         A[i + j] = Array2[j]
         j = j + 1
-        m_swap += 1
     return A
 #ferdig mergesort
 
 
-#Quicksort:
+#Quicksort----------------------------------------------
 def ChoosePivot(A, low, high):
     global q_comp, q_swap
     midt= (low + high)//2
@@ -91,29 +86,37 @@ def Quicksort(A, low, high):
     Quicksort(A, low, p-1)
     Quicksort(A, p+1, high)
     return A
-#end quicksort
+#quicksort end
 
-"""
-#bubble og insertion:
-def bubbleSort(A):
-    n= len(A)+1  #Den kjører ikke nok ganger idk why, men denne redda koden
-    for i in range (n-2): #egt skal det stå n-1 da vil den funke uten å endre n
-        for j in range (0,n-i-2):# samme her
-            if A[j] > A[j+1]:
-                A[j],A[j+1]=A[j+1],A[j]
-    return A
-
-
-def insertion(A):
+#BubbleSort----------------------------------------
+def BubbleSort(A):
+    global b_swap, b_comp
     n = len(A)
-    for i in range(1,n): #måtte endre til n fordi den ikke kommer til å gå gjennom alle elementene?
-        j=i
-        while j>0 and A[j-1]> A[j]:
-            A[j-1], A[j]=A[j],A[j-1]
-            j=j-1
+    for i in range(n-1):
+        for j in range(n-1-i):
+            b_comp += 1
+            if A[j] > A[j+1]:
+                A[j], A[j+1] = A[j+1], A[j]
+                b_swap += 1
     return A
-#ferdig bubble og insertion
-"""
+#Bubble end
+
+#insertion----------------------------------------
+def InsertionSort(A):
+    global i_swap, i_comp
+    n = len(A)
+    for i in range(1, n):
+        j = i
+        while j > 0 and A[j-1] > A[j]:
+            i_comp += 1
+            A[j-1], A[j] = A[j], A[j-1]
+            i_swap += 1
+            j -= 1
+        if j > 0:
+            i_comp += 1
+    return A
+#insertion end
+
 
 import time
 import csv
@@ -124,29 +127,65 @@ m_comp = 0
 m_swap = 0
 q_swap = 0
 q_comp = 0
+i_comp = 0
+i_swap = 0
+b_comp = 0
+b_swap = 0
+
+i_midl_tid = 0.0
+m_midl_tid = 0.0
+b_midl_tid = 0.0
+q_midl_tid = 0.0
 
 filnavn = input("Vennligst legg ved din fil:\n ")
 
 array = []
 with open(filnavn, "r") as f:
-    with open(filnavn+"_results", "w", newline="") as file:
+    with open(filnavn+"_results.csv", "w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(("n", "merge_cmp", "merge_swaps", "merge_time", "quicksort_cmp", "quicksort_swaps", "quicksort_time"))
+        writer.writerow(("n", "merge_cmp", "merge_swaps", "merge_time", "quicksort_cmp", "quicksort_swaps", "quicksort_time", "insert_cmp", "insert_swap", "insert_time", "bubble_cmp", "bubble_swap", "bubble_time"))
         
         lesfil = f.read().split()
+
+        tur = 0
         for line in lesfil:
+            m_midl_tid, q_midl_tid, i_midl_tid, b_midl_tid
+            #m_timeus, q_timeus, i_timeus, b_timeus
+            #m_t, q_t, i_t, b_t
+            tur = (tur + 1) % 4
+
+            #m_comp = m_swap = 0
+            #q_comp = q_swap = 0
+            #i_comp = i_swap = 0
+            #b_comp = b_swap = 0
+
+            if tur == 0:
+                m_t = time.time_ns()
+                m_sortert = MergeSort(array)
+                m_timeus = (time.time_ns() - m_t) / 1000
+                m_midl_tid += int(m_timeus)
+        
+            if tur == 1:
+                q_t = time.time_ns()
+                q_sortert = Quicksort(array, 0, len(array)-1)
+                q_timeus = (time.time_ns() - q_t) / 1000
+                q_midl_tid += int(q_timeus)
+
+            if tur == 2:
+                i_t = time.time_ns()
+                i_sortert = InsertionSort(array)
+                i_timeus = (time.time_ns() - i_t) / 1000
+                i_midl_tid += int(i_timeus)
+
+            if tur == 3:
+                b_t = time.time_ns()
+                b_sortert = BubbleSort(array)
+                b_timeus = (time.time_ns() - b_t) / 1000
+                b_midl_tid += int(b_timeus)
+
+
+            writer.writerow([len(array), m_comp, m_swap, m_midl_tid, q_comp, q_swap, q_midl_tid, i_comp, i_swap, i_midl_tid, b_comp, b_swap, b_midl_tid])
+
             array.append(int(line))
 
-            m_comp = m_swap = 0
-            q_comp = q_swap = 0
-
-            m_t = time.time_ns()
-            m_sortert = MergeSort(array.copy())
-            m_timeus = (time.time_ns() - m_t) / 1000
-
-            q_t = time.time_ns()
-            q_sortert = Quicksort(array.copy(), 0, len(array)-1)
-            q_timeus = (time.time_ns() - q_t) / 1000
-
-            writer.writerow([len(array), m_comp, m_swap, m_timeus, q_comp, q_swap, q_timeus])
 
