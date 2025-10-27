@@ -1,0 +1,25 @@
+import heapq
+def dijkstra_finn_korteste_sti(Graf, startnode_id, sluttnode_id):
+    
+    startnode = graf.finn_node(startnode_id)
+    sluttnode = graf.finn_node(sluttnode_id)
+    
+    prioritetskø = [] #heap
+    forelder = {} # lagre hvem vi kom fra
+    avstand = {} #avstanden fra start
+   
+    
+    #Initialiser avstand for alle noder i graf.noder
+    avstand = {startnode: 0}
+    for node in graf.node:
+        if node != startnode:
+            avstand[node] = float('inf')
+    
+    #Legge alle noder i prioritetskøen
+    heapq.heappush(prioritetskø, (avstand[node], node))
+    
+    while len(prioritetskø) > 0:
+        nåværende_node = heapq.heapop(prioritetskø)
+        
+        for nabo in nåværende_node:
+            
