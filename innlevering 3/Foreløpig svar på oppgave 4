@@ -1,3 +1,6 @@
+
+#Oppgave 4
+
 import heapq
 def dijkstra_finn_korteste_sti(Graf, startnode_id, sluttnode_id):
     
