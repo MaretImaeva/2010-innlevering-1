@@ -1,0 +1,67 @@
+#Hvilken film forbinder to skuespillere sammen
+film_edges = {}
+for film_id, (film_obj, actors) in film_dict.items():
+    for i in range(len(actors)):
+        for j in range(i + 1, len(actors)):
+            a, b = actors[i], actors[j]
+            film_edges[(a, b)] = film_obj
+            film_edges[(b, a)] = film_obj
+
+
+#BFS for å finne korteste sti
+def finn_sti(G, start, mål, film_edges):
+    queue = deque()
+    queue.append(start)
+    visited = set()
+    visited.add(start)
+    forelder = {start: None}
+
+    while len(queue) > 0:
+        u = queue.popleft()
+        if u == mål:
+            break #funnet veien
+        for v in G[u]:
+            if v not in visited:
+                visited.add(v)
+                forelder[v] = u
+                queue.append(v)
+        
+    if mål not in forelder:
+        print(f"Ingen sti funnet mellom {start} og {mål}")
+        return
+
+    #Lager stien  
+    sti = []
+    node = mål
+    while node is not None:
+        sti.append(node)
+        node = forelder[node]
+    sti.reverse()
+
+    print(f"Sti fra {start} til {mål}")
+    print(sti[0])
+    for i in range(1, len(sti)):
+        a, b = sti[i-1], sti[i]
+        film = film_edges.get((a, b))
+        if film:
+            print(f"===[ {film.film_navn} ({film.vekt}) ] ===> {b}")
+        else:
+            print(f"===[ ? ] ===> {b}")
+
+
+#Eksempel
+G = {
+    "Donald Glover": ["Terry Crews"],
+    "Terry Crews": ["Donald Glover", "Jeremy Irons"],
+    "Jeremy Irons": ["Terry Crews"]
+}
+
+film_edges = {
+    ("Donald Glover", "Terry Crews"): Film("LA Originals", 7.2, 1),
+    ("Terry Crews", "Donald Glover"): Film("LA Originals", 7.2, 1),
+    ("Terry Crews", "Jeremy Irons"): Film("Inland Empire", 6.8, 1),
+    ("Jeremy Irons", "Terry Crews"): Film("Inland Empire", 6.8, 1)
+}
+
+print(finn_sti(G, "Donald Glover", "Jeremy Irons", film_edges))
+print(finn_sti(G, "Donald Glover", "Terry Crews", film_edges))
