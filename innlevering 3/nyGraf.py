@@ -28,25 +28,22 @@ def les_film():
             film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
             #print(noder)
 
-
 linjer = []
-
 
 def les_skue():
     with open(a_filnavn, "r") as fil:
         for line in fil:
-            deler = line.split('\t') #for å splitte korrekt
+            deler = [d.strip() for d in line.strip().split('\t')]
+            if len(deler) < 3: #sjekker at det er splittet riktig
+                continue
             node = Skuespiller(deler[0], deler[1])
-            filmer = deler[2:]
-            for film in filmer: #for hver film knyttet til skuespilleren
-                if film in film_dict: #sjekkes det om denne eksisterer som kant
-                    film_dict[film][1].append(node) #referer til noder listen inne i Film objektet
-                    
+            for film in deler[2:]:
+                if film in film_dict:
+                    film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
     print("Kjørt")
 
 les_film()
 les_skue()
-
 
 for film in film_dict.values(): #for alle nøkler i film_dict
     for i in range(len(film[1])):
@@ -57,13 +54,18 @@ for film in film_dict.values(): #for alle nøkler i film_dict
             linjer.append((a, b, vekt))
 
 
-def buildgraph(lines):
+for film, (film_obj, actors) in film_dict.items():
+    if len(actors) == 1:
+        print(actors[0],"er alene i filmen", film_obj.film_navn)
+
+
+def buildgraph(lines): #tatt fra notat om Utvalgte grafalgoritmer, av Lars Tveito
     V = set() #set av noder
     E = defaultdict(set) #kanter
     w = dict() #vektfunksjon
 
     for line in lines:
-        print(line)
+        #print(line)
         deler = []
         for item in line:
             deler.append(item)
@@ -78,20 +80,46 @@ def buildgraph(lines):
         w[(u, v)] = int(weight)
         w[(v, u)] = int(weight)
 
+    
+        for film in film_dict.values(): #også legge med naboløse noder
+            for actor in film[1]:
+                V.add(actor)
+                if actor not in E:
+                    E[actor] = set()
+
     return V, E, w
-
-
-                
-def hent_kant():
-    return int(len(m_filnavn))
-
-def hent_act():
-    return int(len(a_filnavn))
-
 
 G = buildgraph(linjer)
 
-print()
-print()
-print("Alt kjørt suksessfult, yay :)")
-print()
+def ant_kanter():
+    return len(linjer)
+
+def hent_noder(G):
+    noder, kanter, vekt = G
+    return noder
+
+print("Noder: ", len(hent_noder(G)),"\nKanter: ", ant_kanter())
+
+
+
+def DFS(G, s): #med stack, også fra graf notat
+    V, E, w = G
+    besøkt = set()
+    resultat = []
+    stack = [s]
+
+    while stack:
+        u = stack.pop()
+        if u not in besøkt:
+            resultat.append(u)
+            besøkt.add(u)
+            for v in E[u]:
+                stack.append(v)
+    
+    print("Er", len(resultat), "riktig ant noder?")
+    mld = input("")
+    if mld.upper() == "NEI":
+        print("Too bad ig")
+
+    return resultat
+DFS(G, "nm0000375")
