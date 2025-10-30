@@ -1,5 +1,5 @@
 from collections import defaultdict
-import graphviz
+import csv
 
 
 class Skuespiller:
@@ -15,31 +15,35 @@ class Film:
         self.vekt = value
 
 
-a_filnavn = "marvel_actors.tsv"
-m_filnavn = "marvel_movies.tsv"
+actors = "marvel_actors.tsv"
+movies = "marvel_movies.tsv"
 
 film_dict = {}
 
 def les_film():
-    with open(m_filnavn, "r") as fil:
-        for line in fil:
-            deler = line.split('\t')
-            noder = []
-            film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
-            #print(noder)
+    fil = open(movies, 'r', encoding='utf-8')  
+    data = fil
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3:
+            print("Feil. Ikke riktig leset")
+        noder = []
+        film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
+        #print(noder)
 
 linjer = []
 
 def les_skue():
-    with open(a_filnavn, "r") as fil:
-        for line in fil:
-            deler = [d.strip() for d in line.strip().split('\t')]
-            if len(deler) < 3: #sjekker at det er splittet riktig
-                continue
-            node = Skuespiller(deler[0], deler[1])
-            for film in deler[2:]:
-                if film in film_dict:
-                    film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
+    fil = open(actors, 'r', encoding='utf-8')  
+    data = fil       
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3: #sjekker at det er splittet riktig
+            continue
+        node = Skuespiller(deler[0], deler[1])
+        for film in deler[2:]:
+            if film in film_dict:
+                film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
     print("Kjørt")
 
 les_film()
@@ -52,11 +56,6 @@ for film in film_dict.values(): #for alle nøkler i film_dict
             b = film[1][j]
             vekt = film[0].vekt
             linjer.append((a, b, vekt))
-
-
-for film, (film_obj, actors) in film_dict.items():
-    if len(actors) == 1:
-        print(actors[0],"er alene i filmen", film_obj.film_navn)
 
 
 def buildgraph(lines): #tatt fra notat om Utvalgte grafalgoritmer, av Lars Tveito
@@ -115,11 +114,7 @@ def DFS(G, s): #med stack, også fra graf notat
             besøkt.add(u)
             for v in E[u]:
                 stack.append(v)
-    
-    print("Er", len(resultat), "riktig ant noder?")
-    mld = input("")
-    if mld.upper() == "NEI":
-        print("Too bad ig")
 
     return resultat
-DFS(G, "nm0000375")
+
+DFS(G, linjer[0][0])
