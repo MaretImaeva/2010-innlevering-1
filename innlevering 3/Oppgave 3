@@ -1,4 +1,3 @@
-#Hvilken film forbinder to skuespillere sammen
 
 film_edges = {}
 for film_id, (film_obj, actors) in film_dict.items():
