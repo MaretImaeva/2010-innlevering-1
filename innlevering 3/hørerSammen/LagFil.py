@@ -54,13 +54,9 @@ def les_skue():
             print("Lagt til alene node")
             linjer.append((deler[0], None, None))
 
-    print("Lest input filer")
-
-
-        
-
 les_film()
 les_skue()
+print("Lest input filer")
 
 
 for film in film_dict.values(): #for alle nøkler i film_dict
