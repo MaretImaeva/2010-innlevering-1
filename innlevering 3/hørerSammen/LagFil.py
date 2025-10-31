@@ -69,10 +69,10 @@ for film in film_dict.values(): #for alle nøkler i film_dict
 
 class Fil:
     def __init__(self):
+        # ...existing code...
+        # Skriv linjer (a, b, weight) til en TSV-fil
+        with open("edges.tsv", "w", encoding="utf-8") as f:
+            for a, b, vekt in linjer:
+                f.write(f"{a}\t{b}\t{vekt}\n")
+        # ...existing code...
         print("Fil laget.")
-    # ...existing code...
-    # Skriv linjer (a, b, weight) til en TSV-fil
-    with open("edges.tsv", "w", encoding="utf-8") as f:
-        for a, b, vekt in linjer:
-            f.write(f"{a}\t{b}\t{vekt}\n")
-    # ...existing code...
