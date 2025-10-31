@@ -1,5 +1,5 @@
 from collections import defaultdict
-import graphviz
+#import graphviz
 
 
 class Skuespiller:
@@ -21,6 +21,7 @@ m_filnavn = "marvel_movies.tsv"
 # m_filnavn = "movies.tsv"
 
 film_dict = {}
+actor_names = {} #kobler skuespiller-ID til navn
 
 def les_film():
     with open(m_filnavn, "r", encoding = "utf-8") as fil:
@@ -39,6 +40,7 @@ def les_skue():
             if len(deler) < 3: #sjekker at det er splittet riktig
                 continue
             node = Skuespiller(deler[0], deler[1])
+            actor_names[deler[0]] = deler[1]
             for film in deler[2:]:
                 if film in film_dict:
                     film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
