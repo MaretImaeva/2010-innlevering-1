@@ -1,0 +1,58 @@
+
+from oppgave1 import Film, linjer, Graf, Skuespiller, unpackGraf
+
+
+def DFS(G,s, visited): #med stack, også fra graf notat
+    V, E, w = unpackGraf(G)
+    resultat = []
+    stack = [s]
+
+    while stack:
+        u = stack.pop()
+        if u not in visited:
+            resultat.append(u)
+            visited.add(u)
+            for v in E[u]:
+                stack.append(v)
+    return resultat
+    
+
+def DFSFull(G):
+    V, E, w = unpackGraf(G)
+    visited = set()
+    komponenter = []
+    antall = 0
+    for v in V:
+        if v not in visited:
+            komp=DFS(G,v,visited)
+            komponenter.append(komp)
+            antall += len(komponenter)
+    print("Antall komponenter i grafen er ", len(komponenter))
+    return komponenter
+
+
+#Finner størrelsen på komponenetene 
+def kompSize(G):
+    V, E, w = unpackGraf(G)
+    visited = set()
+    size = []
+    for v in V:
+        if v not in visited:
+            comp = DFS(G, v, visited)
+            size.append(len(comp))
+    return size
+    
+def skrivStørrelser(G):
+    size = kompSize(G)
+    freq = {}
+    for i in size:
+        freq[i] = freq.get(i,0)+1
+        print("det er", freq[i], "antall grafer med ", i," noder")
+
+
+
+
+
+graf = Graf(linjer)
+DFSFull(graf)
+skrivStørrelser(graf)
