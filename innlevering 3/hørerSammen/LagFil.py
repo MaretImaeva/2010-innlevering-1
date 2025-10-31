@@ -54,7 +54,7 @@ def les_skue():
             print("Lagt til alene node")
             linjer.append((deler[0], None, None))
 
-    print("Kjørt")
+    print("Lest input filer")
 
 
         
