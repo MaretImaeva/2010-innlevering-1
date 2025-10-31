@@ -17,9 +17,6 @@ class Film:
 actors = "actors.tsv"
 movies = "movies.tsv"
 
-# actors = "marvel_actors.tsv"
-# movies = "marvel_movies.tsv"
-
 
 film_dict = {} #nøkkelen er film IDen, verdien er et tuppel med film objektet og en liste av skuespillere i filmen
 
@@ -57,7 +54,7 @@ def les_skue():
             linjer.append((deler[0], None, None))
 
     print("Lest input filer")
-    print("loader...")
+    print("Laster...")
 
         
 
@@ -155,11 +152,8 @@ def ant_kanter():
 def hent_noder(G):
     return G.hentV()
 
-
-print("Noder: ", len(hent_noder(G)),"\nKanter: ", ant_kanter())
-
-
-
+def skriv_ut():
+    print("Noder: ", len(hent_noder(G)),"\nKanter: ", ant_kanter())
 
 def unpackGraf(G):
     try:
@@ -194,12 +188,8 @@ def DFSFull(G):
     for v in V:
         if v not in visited:
             komp=DFS(G,v,visited)
-            # komp = DFS((V,E,w),v,visited)
             komponenter.append(komp)
             antall += len(komponenter)
-            # antall+=1
-    # return komponenter,  antall
-    print("Antall komponenter i grafen er ", len(komponenter))
     return komponenter
 
 
@@ -225,6 +215,6 @@ def skrivStørrelser(G):
 
 
 
-# graf = Graf(linjer)
-# DFSFull(graf)
-# skrivStørrelser(graf)
+graf = Graf(linjer)
+DFSFull(graf)
+skriv_ut()
