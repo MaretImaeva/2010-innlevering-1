@@ -58,7 +58,15 @@ def dijkstra_finn_korteste_sti(graf, id1, id2):
         node = forelder[node]
     sti.reverse()
 
+    for i in range(1, len(sti)):
+        a, b = sti[i-1], sti[i]
+        film = kanter.get((a, b))
+        if film:
+            print(f"===[ {film.film_navn} ({film.vekt}) ] ===> {b}") #lånte fra Samiras kode
+        else:
+            print(f"===[ ? ] ===> {b}")
+
     return avstand[sluttnode], sti
 
 
-print(dijkstra_finn_korteste_sti(G, "nm2255973","nm0000460"))
+dijkstra_finn_korteste_sti(G, "nm2255973","nm0000460")
