@@ -1,0 +1,84 @@
+
+from buildGraf import Graf, graf, linjer, film_edges, actor_names
+import csv
+
+import heapq
+
+def les_tsv(filnavn):
+    with open(filnavn, newline='', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter='\t')
+        data = [(rad[0], rad[1], rad[2]) for rad in reader if len(rad) >= 3]
+    return data
+
+kanter = les_tsv("edges.tsv")
+
+
+G = Graf(kanter)
+
+def dijkstra_finn_korteste_sti(graf, id1, id2, film_edges):
+    noder = graf.hentV()
+    edges = graf.hentE()
+    w = graf.hentW()
+
+    startnode = graf.finn_node(id1)
+    sluttnode = graf.finn_node(id2)
+
+    if startnode is None or sluttnode is None:
+        print(f"En av nodene finnes ikke i grafen: {id1} eller {id2}")
+        return None, []
+
+    avstand = {node: float('inf') for node in noder} #gir inf verdi til alle noder
+    avstand[startnode] = 0
+    forelder = {node: None for node in noder}
+
+    pq = []
+    heapq.heappush(pq, (0, startnode))
+    besøkt = set()
+
+    while pq:
+        nåværende_avstand, nåværende_node = heapq.heappop(pq)
+
+        if nåværende_node in besøkt:
+            continue
+        besøkt.add(nåværende_node)
+
+        if nåværende_node == sluttnode:
+            break  # Vi har funnet korteste vei
+
+
+        
+        for nabo, vekt in graf.hent_naboer(nåværende_node):
+            ny_avstand = nåværende_avstand + vekt
+            if ny_avstand < avstand[nabo]:
+                avstand[nabo] = ny_avstand
+                forelder[nabo] = nåværende_node
+                heapq.heappush(pq, (ny_avstand, nabo))
+
+    # Rekonstruer korteste sti
+    sti = []
+    node = sluttnode
+    while node is not None:
+        sti.append(node)
+        node = forelder[node]
+    sti.reverse()
+
+    total_weight = 0 
+
+    print(f"Sti fra {actor_names.get(startnode, startnode)} til {actor_names.get(sluttnode, sluttnode)}")
+    print(actor_names.get(sti[0], sti[0]))
+    for i in range(1, len(sti)):
+        a, b = sti[i-1], sti[i]
+        film = film_edges.get((a, b))
+        if film:
+            vekt = 10 - float(film.vekt)  # vektfunksjonen fra oppgaven
+            total_weight += vekt
+            print(f"===[ {film.film_navn} ({film.vekt}) ] ===> {actor_names.get(b, b)}")
+        else:
+            print(f"===[ ? ] ===> {actor_names.get(b, b)}")
+
+    print("Total weight:", round(total_weight, 2))
+    return avstand[sluttnode], sti
+
+
+dijkstra_finn_korteste_sti(graf, "nm2255973","nm0000460", film_edges)
+dijkstra_finn_korteste_sti(graf, "nm0001765", "nm0000375", film_edges)
