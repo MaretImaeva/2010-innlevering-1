@@ -1,0 +1,226 @@
+
+from collections import defaultdict, deque
+#import graphviz
+import csv
+class Skuespiller:
+    def __init__(self, id, navn):
+        self.id = id
+        self.navn = navn
+
+
+class Film:
+    def __init__(self, id, navn, value: int):
+        self.film_id = id
+        self.film_navn = navn
+        self.vekt = value
+
+
+#actors = "actors.tsv"
+#movies = "movies.tsv"
+
+a_filnavn = "marvel_actors.tsv"
+m_filnavn = "marvel_movies.tsv"
+
+
+film_dict = {} #nøkkelen er film IDen, verdien er et tuppel med film objektet og en liste av skuespillere i filmen
+actor_names = {}  # id -> navn
+
+def les_film():
+    fil = open(m_filnavn, 'r', encoding='utf-8')  
+    data = fil
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3:
+            print("Feil. Ikke riktig leset")
+        noder = []
+        film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
+
+linjer = []
+
+
+def les_skue():
+    fil = open(a_filnavn, 'r', encoding='utf-8')  
+    data = fil       
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3: #sjekker at det er splittet riktig
+            continue
+        node = Skuespiller(deler[0], deler[1])
+        actor_names[deler[0]] = deler[1]
+        filmer = []
+        for film in deler[2:]:
+            filmer.append(film)
+            if film in film_dict:
+                film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
+
+    
+    for line in data:
+        if line not in film_dict:
+            print("Lagt til alene node")
+            linjer.append((deler[0], None, None))
+
+    print("Lest input filer")
+    print("Laster...")
+
+        
+
+les_film()
+les_skue()
+
+
+for film in film_dict.values(): #for alle nøkler i film_dict
+    for i in range(len(film[1])):
+        for j in range(i +1, len(film[1])):
+            a = film[1][i]
+            b = film[1][j]
+            vekt = film[0].vekt
+            linjer.append((a, b, vekt))
+
+class Fil:
+    def __init__(self):
+        print("Fil laget.")
+    # Skriv linjer (a, b, weight) til en TSV-fil
+    with open("edges.tsv", "w", encoding="utf-8") as f:
+        for a, b, vekt in linjer:
+            f.write(f"{a}\t{b}\t{vekt}\n")
+
+
+def les_tsv(filnavn):
+    with open(filnavn, newline='', encoding='utf-8') as f:
+        reader = csv.reader(f, delimiter='\t')
+        data = [(rad[0], rad[1], rad[2]) for rad in reader if len(rad) >= 3]
+    return data
+
+
+class Graf:
+    def __init__(self, lines):
+        self.V = set() #set av noder
+        self.E = defaultdict(set) #kanter
+        self.w = dict() #vektfunksjon
+        self.naboer = defaultdict(list)
+
+        # Bygg grafen fra linjer (kanter)
+        for line in lines:
+            # forventer (u, v, weight)
+            if line is None or len(line) < 2:
+                continue
+            u, v, weight = line[0], line[1], line[2]
+
+            if u is None or v is None:
+                continue
+
+            self.V.add(u)
+            self.V.add(v)
+
+            self.E[u].add(v)
+            self.E[v].add(u)
+
+            self.naboer[u].append((v, float(weight)))
+            self.naboer[v].append((u, float(weight)))
+
+            self.w[(u, v)] = float(weight)
+            self.w[(v, u)] = float(weight)
+
+
+        for film in film_dict.values(): 
+            for actor in film[1]:
+                self.V.add(actor)
+                if actor not in self.E:
+                    self.E[actor] = set()
+
+
+    def finn_node(self, node_id): 
+        if node_id not in self.V:
+            return
+        for node in self.V: #om noder legges inn som objekter, endre node til node.id
+            if node == node_id:
+                return node
+            
+    def hentV(self):
+        return self.V
+    
+    def hentE(self):
+        return self.E
+    
+    def hentW(self):
+        return self.w
+    
+    def hent_naboer(self, node_id):
+        return self.naboer[node_id]
+    
+kanter = les_tsv("edges.tsv")
+
+G = Graf(kanter)
+
+def ant_kanter():
+    return len(kanter)
+
+def hent_noder(G):
+    return G.hentV()
+
+def skriv_ut():
+    print("Noder: ", len(hent_noder(G)),"\nKanter: ", ant_kanter())
+
+def unpackGraf(G):
+    try:
+        V=G.hentV()
+        E=G.hentE()
+        w=G.hentW()
+        # return V,E,w
+    except AttributeError:
+        V,E,w = G
+    return V,E,w
+
+def DFS(G,s, visited): #med stack, også fra graf notat
+    V, E, w = unpackGraf(G)
+    resultat = []
+    stack = [s]
+
+    while stack:
+        u = stack.pop()
+        if u not in visited:
+            resultat.append(u)
+            visited.add(u)
+            for v in E[u]:
+                stack.append(v)
+    return resultat
+    
+
+def DFSFull(G):
+    V, E, w = unpackGraf(G)
+    visited = set()
+    komponenter = []
+    antall = 0
+    for v in V:
+        if v not in visited:
+            komp=DFS(G,v,visited)
+            komponenter.append(komp)
+            antall += len(komponenter)
+    return komponenter
+
+
+#Finner størrelsen på komponenetene 
+def kompSize(G):
+    V, E, w = unpackGraf(G)
+    visited = set()
+    size = []
+    for v in V:
+        if v not in visited:
+            comp = DFS(G, v, visited)
+            size.append(len(comp))
+    return size
+    
+def skrivStørrelser(G):
+    size = kompSize(G)
+    freq = {}
+    for i in size:
+        freq[i] = freq.get(i,0)+1
+        print("det er", freq[i], "antall grafer med ", i," noder")
+
+
+
+
+
+graf = Graf(linjer)
+DFSFull(graf)
+skriv_ut()
