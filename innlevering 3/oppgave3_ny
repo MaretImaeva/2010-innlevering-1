@@ -1,3 +1,4 @@
+from buildGraf import G, film_dict, actor_names
 
 film_edges = {}
 for film_id, (film_obj, actors) in film_dict.items():
@@ -73,3 +74,4 @@ def finn_sti(G, start, mål, film_edges):
 
 finn_sti(G, "nm0000375", "nm0424060", film_edges)
 finn_sti(G, "nm0001765", "nm0000375", film_edges)
+
