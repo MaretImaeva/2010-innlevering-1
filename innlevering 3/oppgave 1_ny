@@ -224,3 +224,12 @@ def skrivStørrelser(G):
 graf = Graf(linjer)
 DFSFull(graf)
 skriv_ut()
+
+
+film_edges = {}
+for film_id, (film_obj, actors) in film_dict.items():
+    for i in range(len(actors)):
+        for j in range(i + 1, len(actors)):
+            a, b = actors[i], actors[j]
+            film_edges[(a, b)] = film_obj
+            film_edges[(b, a)] = film_obj
