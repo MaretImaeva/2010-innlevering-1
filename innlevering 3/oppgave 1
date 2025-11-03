@@ -1,6 +1,6 @@
-from collections import defaultdict, deque
-import graphviz
-import csv
+from collections import defaultdict
+from itertools import combinations
+
 class Skuespiller:
     def __init__(self, id, navn):
         self.id = id
@@ -18,7 +18,11 @@ actors = "actors.tsv"
 movies = "movies.tsv"
 
 
+# actors = "marvel_actors.tsv"
+# movies = "marvel_movies.tsv"    
+
 film_dict = {} #nøkkelen er film IDen, verdien er et tuppel med film objektet og en liste av skuespillere i filmen
+
 
 def les_film():
     fil = open(movies, 'r', encoding='utf-8')  
@@ -27,11 +31,12 @@ def les_film():
         deler = [d.strip() for d in line.strip().split('\t')]
         if len(deler) < 3:
             print("Feil. Ikke riktig leset")
-        noder = []
+        noder = []  #skuespiller id-er     #blir aldri endret???
         film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
 
 linjer = []
 
+print("Lest input filer")
 
 def les_skue():
     fil = open(actors, 'r', encoding='utf-8')  
@@ -40,20 +45,18 @@ def les_skue():
         deler = [d.strip() for d in line.strip().split('\t')]
         if len(deler) < 3: #sjekker at det er splittet riktig
             continue
-        node = Skuespiller(deler[0], deler[1])
+        # node = Skuespiller(deler[0], deler[1])
         filmer = []
         for film in deler[2:]:
             filmer.append(film)
             if film in film_dict:
                 film_dict[film][1].append(deler[0]) #legger til node IDen, men kan byttes ut med å legge til node objekt eller navn også
+            elif film not in film_dict:
+                # print("Lagt til alene node", deler[1])   
+                linjer.append((deler[0], None, None))
+                continue
+    print("Lagret alle skuespillere, selv de ensomme")
 
-    
-    for line in data:
-        if line not in film_dict:
-            print("Lagt til alene node")
-            linjer.append((deler[0], None, None))
-
-    print("Lest input filer")
     print("Laster...")
 
         
@@ -62,13 +65,15 @@ les_film()
 les_skue()
 
 
-for film in film_dict.values(): #for alle nøkler i film_dict
-    for i in range(len(film[1])):
-        for j in range(i +1, len(film[1])):
-            a = film[1][i]
-            b = film[1][j]
-            vekt = film[0].vekt
-            linjer.append((a, b, vekt))
+
+###gjør koden mye raskere, den finner alle kombinasjonene av skuespillere i en film 
+#Går fra o(n^3) til o(n^2)
+for film_obj, actors in film_dict.values():
+    for a, b in combinations(actors, 2):
+        linjer.append((a, b, film_obj.vekt))
+
+
+
 
 class Fil:
     def __init__(self):
@@ -79,11 +84,6 @@ class Fil:
             f.write(f"{a}\t{b}\t{vekt}\n")
 
 
-def les_tsv(filnavn):
-    with open(filnavn, newline='', encoding='utf-8') as f:
-        reader = csv.reader(f, delimiter='\t')
-        data = [(rad[0], rad[1], rad[2]) for rad in reader if len(rad) >= 3]
-    return data
 
 
 class Graf:
@@ -102,6 +102,15 @@ class Graf:
 
             if u is None or v is None:
                 continue
+            # sjekk for None 
+            try:
+                weight = float(weight) 
+                if weight != 'None':
+                    weight = weight
+                else:
+                    weight = 0.0
+            except (ValueError, TypeError):
+                weight = 0.0
 
             self.V.add(u)
             self.V.add(v)
@@ -142,12 +151,10 @@ class Graf:
     def hent_naboer(self, node_id):
         return self.naboer[node_id]
     
-kanter = les_tsv("edges.tsv")
-
-G = Graf(kanter)
+G = Graf(linjer)
 
 def ant_kanter():
-    return len(kanter)
+    return len(linjer)
 
 def hent_noder(G):
     return G.hentV()
@@ -160,61 +167,10 @@ def unpackGraf(G):
         V=G.hentV()
         E=G.hentE()
         w=G.hentW()
-        # return V,E,w
     except AttributeError:
         V,E,w = G
     return V,E,w
 
-def DFS(G,s, visited): #med stack, også fra graf notat
-    V, E, w = unpackGraf(G)
-    resultat = []
-    stack = [s]
-
-    while stack:
-        u = stack.pop()
-        if u not in visited:
-            resultat.append(u)
-            visited.add(u)
-            for v in E[u]:
-                stack.append(v)
-    return resultat
-    
-
-def DFSFull(G):
-    V, E, w = unpackGraf(G)
-    visited = set()
-    komponenter = []
-    antall = 0
-    for v in V:
-        if v not in visited:
-            komp=DFS(G,v,visited)
-            komponenter.append(komp)
-            antall += len(komponenter)
-    return komponenter
-
-
-#Finner størrelsen på komponenetene 
-def kompSize(G):
-    V, E, w = unpackGraf(G)
-    visited = set()
-    size = []
-    for v in V:
-        if v not in visited:
-            comp = DFS(G, v, visited)
-            size.append(len(comp))
-    return size
-    
-def skrivStørrelser(G):
-    size = kompSize(G)
-    freq = {}
-    for i in size:
-        freq[i] = freq.get(i,0)+1
-        print("det er", freq[i], "antall grafer med ", i," noder")
-
-
-
-
 
 graf = Graf(linjer)
-DFSFull(graf)
 skriv_ut()
