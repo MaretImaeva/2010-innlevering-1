@@ -31,7 +31,7 @@ def les_film():
         deler = [d.strip() for d in line.strip().split('\t')]
         if len(deler) < 3:
             print("Feil. Ikke riktig leset")
-        noder = []  #skuespiller id-er     #blir aldri endret???
+        noder = []  #skuespiller id-er     
         film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
 
 linjer = []
