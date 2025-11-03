@@ -15,21 +15,6 @@ def DFS(G,s, visited): #med stack, også fra graf notat
             for v in E[u]:
                 stack.append(v)
     return resultat
-    
-
-def DFSFull(G):
-    V, E, w = unpackGraf(G)
-    visited = set()
-    komponenter = []
-    antall = 0
-    for v in V:
-        if v not in visited:
-            komp=DFS(G,v,visited)
-            komponenter.append(komp)
-            antall += len(komponenter)
-    print("Antall komponenter i grafen er ", len(komponenter))
-    return komponenter
-
 
 #Finner størrelsen på komponenetene 
 def kompSize(G):
@@ -47,12 +32,8 @@ def skrivStørrelser(G):
     freq = {}
     for i in size:
         freq[i] = freq.get(i,0)+1
-        print("det er", freq[i], "antall grafer med ", i," noder")
-
-
-
-
+    for i in freq:
+        print("There are", freq[i], "components of size", i)
 
 graf = Graf(linjer)
-DFSFull(graf)
 skrivStørrelser(graf)
