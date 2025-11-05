@@ -1,0 +1,88 @@
+from Graf1000 import alt_dict, film_dict
+
+film_edges = {}
+for film_id, (film_obj, actors) in film_dict.items():
+    for i in range(len(actors)):
+        for j in range(i + 1, len(actors)):
+            a, b = actors[i], actors[j]
+            film_edges[(a, b)] = film_obj
+            film_edges[(b, a)] = film_obj
+
+#Korte veien mellom to skuespillere
+from collections import deque
+def BFSVisit(G, start, visited):
+    visited = set()
+    queue = deque()
+    queue.append(start)
+    visited.add(start)
+
+    while len(queue) > 0:
+        u = queue.popleft()
+        for v in G[u]:
+            if v not in visited:
+                visited.add(v)
+                queue.append(v)
+
+
+def BFSFull(G):
+    visited = set()
+    for v in G:
+        if v not in visited:
+            BFSVisit(G, v, visited)
+
+#BFS for å finne korteste vei
+def finn_sti(start, mål):
+    # V, E, w = G.hentV(), G.hentE(), G.hentW()
+    V = set(alt_dict.keys())
+    E = {u: set() for u in V}
+    W = {}
+
+    for u, data in alt_dict.items():
+        for i in data.get("kant", []):
+            v_id = i[0]
+            E[u].add(v_id)
+            E.setdefault(v_id, set()).add(u)  # urettet
+
+
+
+    queue = deque()
+    queue.append(start)
+    visited = set()
+    visited.add(start)
+    forelder = {start: None}
+
+    while len(queue) > 0:
+        u = queue.popleft()
+        if u == mål:
+            break #funnet veien
+        for v in E[u]:
+            if v not in visited:
+                visited.add(v)
+                forelder[v] = u
+                queue.append(v)
+        
+    if mål not in forelder:
+        print(f"Ingen sti funnet mellom {start} og {mål}")
+        return
+
+    #Lager stien  
+    sti = []
+    node = mål
+    while node is not None:
+        sti.append(node)
+        node = forelder[node]
+    sti.reverse()
+
+    print(f"Sti fra {alt_dict[start]['navn']} til {alt_dict[mål]['navn']}")
+    print(alt_dict[sti[0]]["navn"])
+    for i in range(1, len(sti)):
+        a, b = sti[i-1], sti[i]
+        film = film_edges.get((a, b))
+        if film:
+            print(f"===[ {film.film_navn} ({film.vekt}) ] ===> {alt_dict[b]['navn']}")
+
+
+
+
+finn_sti("nm0000375", "nm0424060")
+finn_sti("nm0001765", "nm0000375")
