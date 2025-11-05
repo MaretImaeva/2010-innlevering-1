@@ -1,8 +1,6 @@
+from graf100 import alt_dict
 
-from buildGraf import alt_dict
-#alt_dit representerer grafen og inneholder nodet, kanter og vektene
-
-def DFS(s, visited):  # DFS med stack
+def DFS(G, s, visited):  # beholder signaturen, ignorerer G
     resultat = []
     stack = [s]
 
@@ -11,39 +9,36 @@ def DFS(s, visited):  # DFS med stack
         if u not in visited:
             resultat.append(u)
             visited.add(u)
-            
-            for v in alt_dict[u]:
+            # naboer ligger i alt_dict[u]["kant"] som (nabo_id, tittel, filmID, vekt)
+            for v, film_tittel, film_id, rating in alt_dict.get(u, {}).get("kant", []):
                 if v not in visited:
                     stack.append(v)
     return resultat
 
-
-
-def kompSize():
+# Finner størrelsen på komponentene
+def kompSize(G):  # beholder signaturen, ignorerer G
     visited = set()
     size = []
 
-    # Bygg mengden av noder fra både nøkler og naboer
+    # bygg V fra nøkler + naboer i alt_dict
     V = set(alt_dict.keys())
-
-    for i in alt_dict.values():
-        for v in i:
-            V.add(v)
+    for entry in alt_dict.values():
+        for v_id, film_tittel, film_id, rating in entry.get("kant", []):
+            V.add(v_id)
 
     for v in V:
         if v not in visited:
-            comp = DFS(v, visited)
+            comp = DFS(G, v, visited)
             size.append(len(comp))
     return size
 
-
-
-def skrivStørrelser():
-    size = kompSize()
+def skrivStørrelser(G):  # beholder signaturen, ignorerer G
+    size = kompSize(G)
     freq = {}
     for i in size:
         freq[i] = freq.get(i, 0) + 1
     for i in freq:
         print("There are", freq[i], "components of size", i)
 
-skrivStørrelser()
+# kall med en dummy (G brukes ikke lenger)
+skrivStørrelser(None)
