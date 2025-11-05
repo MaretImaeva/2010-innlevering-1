@@ -8,12 +8,17 @@ Lagrer hver linje som film eller skuespiller objekter.
 Grafen er implementert som en defaultdict alt_dict, hvor det er to maps inni alt_dict.
 
 Oppgave 2:
+filnavn: oppgave2.py
+kommando py oppgave2.py
 
+Logikk:
+Bruker en DFS søk for å finne sammenhengende komponenter i alt_dict (grafen). KompSize() blir brukt for å regne ut størrelsen for hvert komponent. srivStørrelser() brukes til å telle og skrive ut hvor mange komponenter det finnes i hver størrelse.
 
 
 Oppgave 3:
-
-
+filnavn oppgave3.py
+kommando py oppgave3.py
+Importerer og bruker film_dict, en ordbok som inneholder informajsonen om filmene og hvilke skuespiller som er involvert i hver film. Bruker BFS for å finne og skrive den korteste stien mellom to skuespilelre. 
 
 Oppgave 4: 
 filnavn: Chilleste_vei
