@@ -1,4 +1,4 @@
-from Graf1000 import alt_dict, film_dict
+from graf1000 import alt_dict, film_dict
 
 film_edges = {}
 for film_id, (film_obj, actors) in film_dict.items():
