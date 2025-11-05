@@ -1,4 +1,4 @@
-from graf100 import alt_dict
+from Chilleste_vei import alt_dict
 
 def DFS(G, s, visited):  # beholder signaturen, ignorerer G
     resultat = []
@@ -42,3 +42,4 @@ def skrivStørrelser(G):  # beholder signaturen, ignorerer G
 
 # kall med en dummy (G brukes ikke lenger)
 skrivStørrelser(None)
+
