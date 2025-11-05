@@ -2,7 +2,7 @@
 from collections import defaultdict
 from itertools import combinations
 import heapq 
-from Graf1000 import alt_dict, hent_navn, Skuespiller, Film
+from Graf1000 import alt_dict, Skuespiller, Film
 import csv
 import itertools
 
