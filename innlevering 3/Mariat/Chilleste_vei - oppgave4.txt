@@ -1,1 +1,7 @@
+Oppgave 4: 
+filnavn: Chilleste_vei
+Kommando: py Chilleste_vei.py
+
+Er litt en endring i grafen, så den er igjen implementert før dijkstra algoritmen. 
+Algoritmen går gjennom alle stier fra node 1 til node 2, og returnerer den med høyeste rating.
 
