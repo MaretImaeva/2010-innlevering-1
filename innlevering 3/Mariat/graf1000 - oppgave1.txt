@@ -1,0 +1,8 @@
+Oppgave 1:
+filnavn: graf1000.py
+Kommando: py graf1000.py
+
+Logikk:
+Leser inn actor og movie filene. 
+Lagrer hver linje som film eller skuespiller objekter.
+Grafen er implementert som en defaultdict alt_dict, hvor det er to maps inni alt_dict.
