@@ -1,0 +1,95 @@
+
+from collections import defaultdict
+from itertools import combinations
+import heapq 
+from Graf1000 import alt_dict, hent_navn, Skuespiller, Film
+import csv
+import itertools
+
+counter = itertools.count()
+
+#actors = "actors.tsv"
+#movies = "movies.tsv"
+
+
+actors = "marvel_actors.tsv"
+movies = "marvel_movies.tsv"    
+
+
+def dijkstra_finn_korteste_sti(alt_dict, id1, id2):
+    start = next((n for n in alt_dict if n.id == id1), None)
+    mål = next((n for n in alt_dict if n.id == id2), None)
+    if start is None or mål is None:
+        print(f"En av nodene finnes ikke: {id1} eller {id2}")
+        return None, []
+
+    #startnode = finn_node(id1)
+    #sluttnode = finn_node(id2)
+
+    if (alt_dict[id1]) is None or (alt_dict[id2]) is None:
+        print(f"En av nodene finnes ikke i grafen: {id1} eller {id2}")
+        return None, []
+    
+    #startnode = startnode.navn #bytt til .id om man ønkser å søke med id
+    #sluttnode = sluttnode.navn
+
+    avstand = {node: float('inf') for node in alt_dict}
+    avstand[start] = 0
+    forelder = {node: None for node in alt_dict}
+
+    pq = [(0, next(counter), start)]
+    besøkt = set()
+
+    while pq:
+        nåværende_avstand, _, nåværende_node = heapq.heappop(pq)
+
+        if nåværende_node in besøkt:
+            continue
+        besøkt.add(nåværende_node)
+
+        if nåværende_node == mål:
+            break  # Vi har funnet korteste vei
+
+        #print(type(alt_dict[nåværende_node]), alt_dict[nåværende_node])
+        for nabo, film_obj in alt_dict[nåværende_node]:
+            vekt = 10-film_obj.vekt
+            ny_avstand = nåværende_avstand + vekt
+            if ny_avstand < avstand[nabo]:
+                avstand[nabo] = ny_avstand
+                forelder[nabo] = nåværende_node
+                heapq.heappush(pq, (ny_avstand, next(counter), nabo))
+
+
+    # Rekonstruer korteste sti
+    sti = []
+    node = mål
+    while node is not None:
+        sti.append(node)
+        node = forelder[node]
+    sti.reverse()
+
+    if not sti:
+        print(f"Ingen sti funnet mellom {start.navn} og {mål.navn}")
+        return None, []
+
+    total_weight = 0 
+
+    print(f"Sti fra {start.navn} til {mål.navn}")
+    for i in range(1, len(sti)):
+        a, b = sti[i-1], sti[i]
+
+        for nabo, film_obj in alt_dict[a]:
+            if nabo == b:
+                vekt = 10 - float(film_obj.vekt)  # vektfunksjonen fra oppgaven
+                total_weight += vekt
+                print(f"===[ {film_obj.film_navn} ({vekt}) ] ===>{b.navn}")
+                break
+
+    print("Total weight:", round(total_weight, 2))
+    return avstand[mål], sti
+
+
+#dijkstra_finn_korteste_sti(alt_dict, "Donald Glover","Jeremy Irons")
+dijkstra_finn_korteste_sti(alt_dict, "nm2255973", "nm0000460")
+
+
