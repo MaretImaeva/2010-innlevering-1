@@ -1,19 +1,82 @@
-
 from collections import defaultdict
 from itertools import combinations
 import heapq 
-from Graf1000 import alt_dict, Skuespiller, Film
 import csv
 import itertools
 
 counter = itertools.count()
 
-#actors = "actors.tsv"
-#movies = "movies.tsv"
+movies = "movies.tsv"
+actors = "actors.tsv"
+
+alt_dict = defaultdict(list)
 
 
-actors = "marvel_actors.tsv"
-movies = "marvel_movies.tsv"    
+class Skuespiller:
+    def __init__(self, id, navn):
+        self.id = id
+        self.navn = navn
+
+class Film:
+    def __init__(self, id, navn, value: int):
+        self.film_id = id
+        self.film_navn = navn
+        self.vekt = value
+
+film_dict = {} #nøkkelen er film IDen, verdien er et tuppel med film objektet og en liste av skuespillere i filmen
+
+def les_film():
+    fil = open(movies, 'r', encoding='utf-8')  
+    data = fil
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3:
+            print("Feil. Ikke riktig leset")
+        noder = []  #skuespiller id-er     
+        film_dict[deler[0]] = (Film(deler[0], deler[1], float(deler[2])), noder)
+
+def les_skue():
+    fil = open(actors, 'r', encoding='utf-8')  
+    data = fil       
+    for line in data:
+        deler = [d.strip() for d in line.strip().split('\t')]
+        if len(deler) < 3: #sjekker at det er splittet riktig
+            continue
+        node = Skuespiller(deler[0], deler[1])
+        alt_dict[node] 
+        filmer = []
+        for film in deler[2:]:
+            filmer.append(film)
+            if film in film_dict:
+                film_dict[film][1].append(node) #legger til noden, men kan byttes ut med å legge til node id eller navn også
+
+    print("Lagret alle skuespillere, selv de ensomme")
+
+    print("Laster...")
+
+les_film()
+les_skue()
+
+for film_obj, actors in film_dict.values():
+    #Fjerner ugyldige elementer
+    actors = [a for a in actors if isinstance(a, Skuespiller)]
+    for a, b in combinations(actors, 2):
+        alt_dict[a].append((b, film_obj))
+        alt_dict[b].append((a, film_obj))
+    
+
+
+
+def antall_noder():
+    return "Antall noder:", len(alt_dict)
+
+def antall_kanter():
+    kanter = 0
+    for val in alt_dict.values():
+        for nabo, kant in val:
+            kanter += 1
+    return "Antall kanter:", kanter
+
 
 
 def dijkstra_finn_korteste_sti(alt_dict, id1, id2):
@@ -91,5 +154,3 @@ def dijkstra_finn_korteste_sti(alt_dict, id1, id2):
 
 #dijkstra_finn_korteste_sti(alt_dict, "Donald Glover","Jeremy Irons")
 dijkstra_finn_korteste_sti(alt_dict, "nm2255973", "nm0000460")
-
-
