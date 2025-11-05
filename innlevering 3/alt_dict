@@ -58,7 +58,6 @@ for film_obj, actors in film_dict.values():
     actors = [a for a in actors if isinstance(a, Skuespiller)]
     for a, b in combinations(actors, 2):
         alt_dict[a].append((b, film_obj))
-        alt_dict[b].append((a, film_obj))
     
 
 
