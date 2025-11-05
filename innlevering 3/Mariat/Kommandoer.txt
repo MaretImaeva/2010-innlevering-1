@@ -1,0 +1,15 @@
+Oppgave 1:
+filnavn: Bygg_grafen.py
+Kommando: py Bygg_grafen.py
+
+Oppgave 2:
+
+
+
+Oppgave 3:
+
+
+
+Oppgave 4: 
+filnavn: Chilleste_vei
+Kommando: py Chilleste_vei.py
