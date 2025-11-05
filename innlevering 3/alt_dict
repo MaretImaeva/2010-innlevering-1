@@ -54,8 +54,12 @@ les_film()
 les_skue()
 
 for film_obj, actors in film_dict.values():
+    #Fjerner ugyldige elementer
+    actors = [a for a in actors if isinstance(a, Skuespiller)]
     for a, b in combinations(actors, 2):
         alt_dict[a].append((b, film_obj))
+        alt_dict[b].append((a, film_obj))
+    
 
 
 
@@ -70,6 +74,12 @@ def antall_kanter():
     return "Antall kanter:", kanter
 
 
+
+
 print(antall_kanter())
 print(antall_noder())
+
+
+
+
 
